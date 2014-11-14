@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 App::uses('AppModel', 'Model');
 
@@ -26,7 +26,6 @@ class Fighter extends AppModel {
      * @todo empecher d'entrer sur une case occupée
      */
     public function doMove($fighterId, $direction){
-
         $this->read(null,$fighterId);
 
         if($direction=='north'){
@@ -43,8 +42,6 @@ class Fighter extends AppModel {
         $this->save();
 
     }
-    
-    
     
    
     /**
@@ -124,7 +121,7 @@ class Fighter extends AppModel {
             
         }else{
             $this->save();
-            //Victim health got dimished according to the attacker strength
+            //Victim's health got dimished according to the attacker strength
             $this->read(null,$victim['Fighter']['id']);
             $this->set('current_health',$this->data['Fighter']['current_health'] - $fighter['Fighter']['skill_strength']);
             $this->save();  
@@ -132,9 +129,10 @@ class Fighter extends AppModel {
         
     }
     
+ 
+    public function createPlayer(){
+        $this->set("id",$this->request->data["id"]);
+    }
 
-    
-   
-    
 }
 
