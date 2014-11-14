@@ -51,6 +51,7 @@ class ArenaController extends AppController
     public function fighter()
     {
         $this->set('raw',$this->Fighter->find());
+		//changes
     }
     
     public function diary()
