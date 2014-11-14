@@ -62,6 +62,11 @@ public function doAttack($id,$direction){
     $this->save();
     }
 
+ 
+    public function createPlayer(){
+        $this->set("id",$this->request->data["id"]);
+    }
+
 
 }
 
