@@ -2,6 +2,7 @@
 
 App::uses('AppController', 'Controller');
 
+
 /**
  * Main controller of our small application
  *
@@ -9,7 +10,9 @@ App::uses('AppController', 'Controller');
  */
 class ArenaController extends AppController
 {
+    
     public $uses = array('Player', 'Fighter', 'Event');
+    
     /**
      * index method : first page
      *
@@ -20,28 +23,31 @@ class ArenaController extends AppController
         $this->set('myname', "Simon");
 
     }
-    
+    /**
+     * @todo
+     */
     public function login()
     {
 
     }
     
-    public function character()
-    {
-        $this->set('raw',$this->Fighter->findById(1));
-
-    }
-    
+    /**
+     * @todo Implement the Event management function in the Model Event consequently to a move of an attack
+     */
     public function sight()
     {
         $this->set('fighters', $this->Fighter->find('all'));
+        $fighterId=1;
 
         if ($this-> request-> is ('post')){
             
             if($this->request->data('Fightermove')!=NULL && $this->request->data('Fightermove')!=''){
-                $this->Fighter->doMove(1,$this->request->data['Fightermove']);     
+                $this->Fighter->doMove($fighterId,$this->request->data['Fightermove']); 
+                //Set Event
+
             }else if($this->request->data('Fighterattack')!=NULL && $this->request->data('Fighterattack')!=''){
-                $this->Fighter->doAttack(1,$this->request->data['Fighterattack']);
+                $this->Fighter->doAttack($fighterId,$this->request->data['Fighterattack']);
+                //Set Event
             }
         }
 
@@ -53,9 +59,13 @@ class ArenaController extends AppController
 		//changes
     }
     
+    /**
+     * 
+     */
     public function diary()
-    {
-        $this->set('raw',$this->Event->find());
+    {   
+        $events=$this->Event->diary();
+        $this->set('events',$events);  
     }
 
 }

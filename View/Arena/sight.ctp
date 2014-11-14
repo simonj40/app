@@ -1,5 +1,5 @@
-<h1>Sight</h1>
-<h2>Fighters</h2>
+<h2>Sight</h2>
+<h3>Fighters</h3>
 <div>
     <?php foreach ($fighters as $fighter): ?>
         <ul>
@@ -14,13 +14,9 @@
     <?php endforeach; ?>
 </div>
 
-
-
-
-
-<h2>Actions</h2>
+<h3>Actions</h3>
 <div>
-<h2>Move</h2>
+<h4>Move</h4>
 <form id="moveFighterForm" method="post" action="sight">
     <label for="move">In which direction would you like to move :</label>
     <select name="Fightermove">
@@ -32,7 +28,7 @@
     </select>
     <input type="submit" value="Send" />
 </form>
-<h2>Attack</h2>
+<h4>Attack</h4>
 <form id="attackForm" method="post" action="sight">
     <label for="attack">In which direction would you like to attack :</label>
     <select name="Fighterattack">
