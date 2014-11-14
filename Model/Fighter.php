@@ -26,6 +26,7 @@ class Fighter extends AppModel {
      * @todo empecher d'entrer sur une case occupée
      */
     public function doMove($fighterId, $direction){
+
         $this->read(null,$fighterId);
         
         if($direction=='north'){
@@ -38,7 +39,11 @@ class Fighter extends AppModel {
             $this->set('coordinate_x',$this->data['Fighter']['coordinate_x'] - 1);
         }
             $this->save();
-            
+
+    }
+    
+    public function doAttack($fighterId, $direction){
+        
     }
     
 }
