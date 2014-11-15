@@ -128,7 +128,7 @@ class Fighter extends AppModel {
         }
         
     }
-    
+
  
     public function createPlayer(){
         $this->set("id",$this->request->data["id"]);
