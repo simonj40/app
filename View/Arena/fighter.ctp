@@ -1,3 +1,4 @@
+<?php
 //create a fighter
 echo $this->Form->create('Player');
 echo $this->Form->input("id");

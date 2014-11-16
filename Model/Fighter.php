@@ -5,27 +5,24 @@ App::uses('AppModel', 'Model');
 class Fighter extends AppModel {
 
     public $displayField = 'name';
-
     public $belongsTo = array(
-
         'Player' => array(
-
             'className' => 'Player',
-
             'foreignKey' => 'player_id',
-
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
         ),
+    );
 
-   );
-
-    /**
+     /**
      * 
      * @param type $fighterId
      * @param type $direction
      * @todo empecher de sortir des limites de l’arène
      * @todo empecher d'entrer sur une case occupée
      */
-    public function doMove($fighterId, $direction){
+    public function doMove($fighterId, $direction) {
         $this->read(null,$fighterId);
 
         if($direction=='north'){
@@ -40,11 +37,10 @@ class Fighter extends AppModel {
 
         $this->set('next_action_time',date('Y-m-d H:i:s'));
         $this->save();
-
+        
     }
     
-   
-    /**
+      /**
      * 
      * @param type $fighterId
      * @param type $direction
@@ -86,7 +82,10 @@ class Fighter extends AppModel {
             //If the attack suceed 
             if(rand(1,20)>$limit){      
                 pr("ATTACK SUCCEDD !");
+                //change...
                 $this->attackSuceed($fighter,$victim);
+                //update fighter level...
+                $this->addLevel($fighter);
             }else{
                 pr("ATTACK FAILED !");
             }
@@ -99,7 +98,7 @@ class Fighter extends AppModel {
         $this->save();
     }
     
-    /**
+        /**
      * Modify the data base data consequently to the successfull attack of the fighter over its victim
      * @param type $fighter
      * @param type $victim
@@ -128,11 +127,24 @@ class Fighter extends AppModel {
         }
         
     }
-
- 
-    public function createPlayer(){
+    
+        public function createPlayer(){
         $this->set("id",$this->request->data["id"]);
+    }
+    
+    public function addLevel($fighter) {
+        //get total experience points from database
+        $this->read(null,$fighter['Fighter']['id']);
+        //set new level
+        $this->set('level', round (($this->data['Fighter']['xp'])/4 ));        
+    }
+
+    public function doProtectBoundary($x, $y) {
+        
+    }
+
+    public function doProtectOcupiedSpace() {
+        
     }
 
 }
-

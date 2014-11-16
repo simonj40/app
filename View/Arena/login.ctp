@@ -1,9 +1,8 @@
 <h2>Login</h2>
-<form method="post" action="login">
-    <label for="email">Email</label>
-    <input type='text' name='login'></input>
-    <label for="password">Password</label>
-    <input type='text' name='password'></input>
-    <input type='submit' value="Connexion"></input>
-</form>
+<?php
+echo $this->Form->create('Login');
+echo $this->Form->input("Email");
+echo $this->Form->input("Password");
+echo $this->Form->end('Connexion');
+?>
 <a href='#'>Forgot your password?</a>

@@ -2,15 +2,11 @@
 <h3>Fighters</h3>
 <div>
     <?php foreach ($fighters as $fighter): ?>
-        <ul>
-            <li>
-                <p><?php echo $fighter["Fighter"]["name"]; ?><br>
-                ( <?php echo $fighter["Fighter"]["coordinate_x"]; ?> , 
-                <?php echo $fighter["Fighter"]["coordinate_y"]; ?> )
-                </p>
-            </li>
-        </ul>
-
+                 <p><span>Fighter name:<?php echo $fighter["Fighter"]["name"]; ?></span><br/>
+                    <span>Fighter level: <?php echo $fighter["Fighter"]["level"]; ?></span><br/>
+                    <span>Fighter position: ( <?php echo $fighter["Fighter"]["coordinate_x"]; ?> , 
+                <?php echo $fighter["Fighter"]["coordinate_y"]; ?> )</span>                
+                
     <?php endforeach; ?>
 </div>
 
