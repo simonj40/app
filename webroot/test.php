@@ -27,7 +27,11 @@ if (!defined('DS')) {
 }
 
 /**
+<<<<<<< HEAD
  * These defines should only be edited if you have CakePHP installed in
+=======
+ * These defines should only be edited if you have cake installed in
+>>>>>>> origin/master
  * a directory layout other than the way it is distributed.
  * When using custom settings be sure to use the DS and do not add a trailing DS.
  */
@@ -62,6 +66,7 @@ if (!defined('APP_DIR')) {
 //define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
 
 /**
+<<<<<<< HEAD
  * This auto-detects CakePHP as a composer installed library.
  * You may remove this if you are not planning to use composer (not recommended, though).
  */
@@ -72,6 +77,8 @@ if (!defined('CAKE_CORE_INCLUDE_PATH') && file_exists($vendorPath . DS . $dispat
 }
 
 /**
+=======
+>>>>>>> origin/master
  * Editing below this line should not be necessary.
  * Change at your own risk.
  *

@@ -36,6 +36,8 @@ class ArenaController extends AppController
      */
     public function sight()
     {
+        $components = array( 'Session' );
+        $this->Session->setFlash('Une action a été réalisée.');
         $this->set('fighters', $this->Fighter->find('all'));
         $fighterId=1;
 
@@ -52,6 +54,7 @@ class ArenaController extends AppController
         }
 
     }
+    
     
     public function fighter()
     {
