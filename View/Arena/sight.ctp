@@ -1,3 +1,4 @@
+<?php $this->assign('title', 'sight');?>
 <h2>Sight</h2>
 <h3>Fighters</h3>
 <div>

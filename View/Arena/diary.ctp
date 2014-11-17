@@ -1,3 +1,4 @@
+<?php $this->assign('title', 'diary');?>
 <h2>Diary</h2>
 <div>
     <?php foreach ($events as $event): ?>

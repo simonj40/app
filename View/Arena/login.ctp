@@ -1,3 +1,4 @@
+<?php $this->assign('title', 'login');?>
 <h2>Login</h2>
 <?php
 echo $this->Form->create('Login');

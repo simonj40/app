@@ -1,3 +1,4 @@
+<?php $this->assign('title', 'fighter');?>
 <?php
 //create a fighter
 echo $this->Form->create('Player');

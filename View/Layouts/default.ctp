@@ -39,6 +39,13 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	<div id="container">
 		<div id="header">
 			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
+                        <?php echo $this->Html->link('Login', array('controller' => 'Arena', 'action' => 'login')); ?>
+                        <?php echo $this->Html->link('Sight', array('controller' => 'Arena', 'action' => 'sight')); ?>
+                        <?php echo $this->Html->link('Fighter', array('controller' => 'Arena', 'action' => 'fighter')); ?>
+                        <?php echo $this->Html->link('Diary', array('controller' => 'Arena', 'action' => 'diary')); ?>
+                        <?php echo $this->Html->link('Index', array('controller' => 'Arena', 'action' => '/')); ?>
+                        
+                        
 		</div>
 		<div id="content">
 
@@ -54,8 +61,18 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 				);
 			?>
 			<p>
-				<?php echo $cakeVersion; ?>
+				<?php echo $cakeVersion; ?>                    
 			</p>
+                        <p>Goup SI1-04-BE</p>
+                        <p>Authors :</p>
+                        <ul>
+                            <li>Simon JASPAR</li>
+                            <li>Kevin EID</li>
+                            <li>Sterling COLEMAN</li>
+                            <li>Japheth KOSGEI</li>
+                        </ul>
+                        <p>options : B-E-F</p>
+                        <a href="https://github.com/simonj40/app.git">GitHub</a>
 		</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>
