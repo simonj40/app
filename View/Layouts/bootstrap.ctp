@@ -49,6 +49,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
             <?php echo $this->Html->link('Fighter', array('controller' => 'Arena', 'action' => 'fighter'), array('class' => 'navbar-brand')); ?>
             <?php echo $this->Html->link('Diary', array('controller' => 'Arena', 'action' => 'diary'), array('class' => 'navbar-brand')); ?>
             <?php echo $this->Html->link('Index', array('controller' => 'Arena', 'action' => '/'), array('class' => 'navbar-brand')); ?>
+            <?php echo $this->Html->link('Sign In', array('controller' => 'Arena', 'action' => 'signin'), array('class' => 'navbar-brand')); ?>
+            <?php echo $this->Html->link('Sign Out', array('controller' => 'Arena', 'action' => 'logout'), array('class' => 'navbar-brand btn btn-primary btn-lg')); ?>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
 
@@ -64,7 +66,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
         </div>
 
 
-        <footer class="bkgimagef">
+        <footer class="bkgimagef" id="footer">
              <div class="container">
             <div class="row text-primary">
                 <div class="col-md-4">

@@ -23,22 +23,42 @@ class Fighter extends AppModel {
      * @todo empecher d'entrer sur une case occupée
      */
     public function doMove($fighterId, $direction) {
+        
         $this->read(null,$fighterId);
-
+        $coordinate_x=$this->data['Fighter']['coordinate_x'];
+        $coordinate_y=$this->data['Fighter']['coordinate_y'];
+        
         if($direction=='north'){
-            $this->set('coordinate_y',$this->data['Fighter']['coordinate_y'] + 1);
+            $coordinate_y+= 1;
         }else if($direction=='south'){
-            $this->set('coordinate_y',$this->data['Fighter']['coordinate_y'] - 1);
+            $coordinate_y-= 1;
         }else if($direction=='east'){
-            $this->set('coordinate_x',$this->data['Fighter']['coordinate_x'] + 1);
+            $coordinate_x+= 1;
         }else if($direction=='west'){
-            $this->set('coordinate_x',$this->data['Fighter']['coordinate_x'] - 1);
+            $coordinate_x-= 1;
+        }
+        
+        if(!$this->occupied($coordinate_x,$coordinate_y)){ 
+            $this->set('coordinate_y',$coordinate_x);
+            $this->set('coordinate_y',$coordinate_y);
+            $this->set('next_action_time',date('Y-m-d H:i:s'));
+            $this->save();
         }
 
-        $this->set('next_action_time',date('Y-m-d H:i:s'));
-        $this->save();
-        
     }
+    
+    public function occupied($coordinate_x,$coordinate_y){
+        $condition=array(
+            'coordinate_x'=>$coordinate_x,
+            'coordinate_y'=>$coordinate_y
+                );
+        //Find the eventual victim in the database
+        $fighter=$this->find( 'first', array( 'conditions' => $condition ) );
+        
+        if (empty($fighter)) return false;
+        else return true;
+    }
+    
     
       /**
      * 

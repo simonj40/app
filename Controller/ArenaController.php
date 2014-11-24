@@ -13,6 +13,19 @@ class ArenaController extends AppController
     
     public $uses = array('Player', 'Fighter', 'Event');
     
+    
+    public function beforeFilter(){
+        
+        $login = $this->Session->read('Connected');
+        $method = $this->request->params['action'];   
+
+        pr($login);
+        if($login==NULL && $method!='login' && $method!='signin' && $method!='forgot' && $method!='recover'){
+            $this->redirect(array('controller' => 'Arena', 'action' => 'login'));
+        }
+        
+    }
+    
     /**
      * index method : first page
      *
@@ -27,8 +40,24 @@ class ArenaController extends AppController
      * @todo
      */
     public function login()
-    {
-
+    {   
+        $login;
+        
+        if ($this-> request-> is ('post')){
+               $login=$this->Player->checkLogin( $this->request->data['Login']['Email'], $this->request->data['Login']['Password'] );
+               if($login){
+                   $this->Session->write('Connected', $this->request->data['Login']['Email']);
+                   $this->redirect(array('controller' => 'Arena', 'action' => 'index'));
+               }
+               else $this->Session->setFlash('Failed !');
+        }
+        
+    }
+    
+    public function logout(){
+        
+        $this->Session->delete('Connected');
+        $this->redirect(array('controller' => 'Arena', 'action' => 'login'));
     }
     
     /**
@@ -46,10 +75,13 @@ class ArenaController extends AppController
             if($this->request->data('Fightermove')!=NULL && $this->request->data('Fightermove')!=''){
                 $this->Fighter->doMove($fighterId,$this->request->data['Fightermove']); 
                 //Set Event
+                $fighter = $this->Fighter->findById($fighterId);
+                $this->Event->moveEvent($fighter);
 
             }else if($this->request->data('Fighterattack')!=NULL && $this->request->data('Fighterattack')!=''){
                 $this->Fighter->doAttack($fighterId,$this->request->data['Fighterattack']);
                 //Set Event
+                $this->Event->moveAttack($fighter);
             }
         }
 
@@ -71,6 +103,64 @@ class ArenaController extends AppController
         $this->set('events',$events);  
     }
     
+    
+     public function signin()
+    {   
+         $error='';
+        if ($this-> request-> is ('post')){
+               $error=$this->Player->createNew( $this->request->data['Subscribe']['Email'], $this->request->data['Subscribe']['Password'] );
+               $this->Session->setFlash($error);
+        }
+        
+        
+    }
+    
+    
+    public function forgot()
+    {   
+        if ($this-> request-> is ('post')){
+               $email=$this->request->data['Forgot']['Email'];
+               $player=$this->Player->findPlayer($email);
+               if($player!=NULL){
+                   $password=$player['Player']['password'];
+                   $link='http://localhost/WebArenaGoupSI1-04-BE/Arena/recover/';
+                   $link.=$email;
+                   $link.='/';
+                   $link.=$password;
+                   
+                   //Send E-mail with link to recover
+                    $Email = new CakeEmail();
+                    $Email->from(array('admin@Arena.com' => 'Arena'));
+                    $Email->to($email);
+                    $Email->subject('Password Recovery Link');
+                    $Email->send($link);
+                    
+                    $this->Session->setFlash('An Email has been sent to you');
+               }else{
+                   $this->Session->setFlash('The account does not exist');
+               }    
+        } 
+    }
+    
+    
+    public function recover($email,$password)
+    {   
+        if ($this-> request-> is ('post')){
+            $this->set('email',$email);
+            $this->set('password',$password);
+            
+            $success = $this->Player->recover($this->request->data['Recover']['Email'],
+                    $this->request->data['Recover']['Password'], $this->request->data['Recover']['New Password']);
+            
+            if($success) $this->Session->setFlash('Password change succeed !');
+            else $this->Session->setFlash('Password change failed !');
+        }else if($this->Player->checkPassword($email,$password)){
+            $this->set('email',$email);
+            $this->set('password',$password);
+        }else $this->redirect(array('controller' => 'Arena', 'action' => 'forgot'));
+
+    }
+    
     /**
      * This is just for testing bootstrap
      */
@@ -78,6 +168,10 @@ class ArenaController extends AppController
     {
         
     }
+    
+    
+    
+    
 
 }
 ?>
