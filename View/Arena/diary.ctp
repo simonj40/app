@@ -1,5 +1,7 @@
-<?php $this->assign('title', 'diary');?>
-<h2>Diary</h2>
+<?php $this->assign('title', 'diary');
+$this->layout = 'bootstrap';
+?>
+<h1>Diary</h1>
 <div>
     <?php foreach ($events as $event): ?>
         <ul>

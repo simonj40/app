@@ -70,6 +70,14 @@ class ArenaController extends AppController
         $events=$this->Event->diary();
         $this->set('events',$events);  
     }
+    
+    /**
+     * This is just for testing bootstrap
+     */
+    public function testbootstrap()
+    {
+        
+    }
 
 }
 ?>
