@@ -9,7 +9,7 @@ $this->layout = 'bootstrap';
        
 <?php
 //create a fighter
-echo $this->Form->create('Fighter', array('role'=>'form', 'class'=>'form-horizontal'));
+echo $this->Form->create('Fighter', array('role'=>'form', 'class'=>'form-horizontal' , 'enctype'=>'multipart/form-data'));
 echo "<div class='col-lg-5'>";
 //echo $this->Form->input("id", array('div'=>'form-group', 'class'=>'form-control'));
 echo $this->Form->input("Name", array('div'=>'form-group', 'class'=>'form-control'));

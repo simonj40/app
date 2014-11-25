@@ -32,7 +32,8 @@ class ArenaController extends AppController
      */
     public function index()
     {
-        $this->set('myname', "Simon");
+        $login = $this->Session->read('Connected');
+        $this->set('myname', $login);
 
     }
     /**
@@ -92,7 +93,7 @@ class ArenaController extends AppController
 
             $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
             $this->set('fighter', $fighter);
-        }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighterForm'));
+        }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighter_form'));
 
     }
     
@@ -106,7 +107,7 @@ class ArenaController extends AppController
             $this->set('fighter',$fighter);
             
         }else{
-            $this->redirect(array('controller' => 'Arena', 'action' => 'fighterForm'));
+            $this->redirect(array('controller' => 'Arena', 'action' => 'fighter_form'));
         }
 
     }
@@ -114,26 +115,48 @@ class ArenaController extends AppController
     /**
      * @todo Implement the Avavtar download and file namng with the fighter id
      */
-    public function fighterForm()
-    {   
-        $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+    public function fighter_form()
+    {   //to delete after test
+        //$this->_newAvatar($this->request->data['Fighter']['Avatar']);
         
+        $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
         if(!empty($fighter)){
             $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
-            
         }else{
             if ($this-> request-> is ('post')){
-            $success = $this->Fighter->newFighter( $this->Session->read('PlayerId'), $this->request->data['Fighter']['Name'] );
-            if($success=='true'){
-                $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
-                $this->Event->fighterEvent($fighter);
+                if($this->newAvatar($this->request->data['Fighter']['Avatar'])){
+                    $success = $this->Fighter->newFighter( $this->Session->read('PlayerId'), $this->request->data['Fighter']['Name'] );
+                    if($success=='true'){
+                    $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+                    $this->Event->fighterEvent($fighter);
+
+                    $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
+                    }else $this->Session->setFlash($success);
+                }
                 
-                $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
-            }else $this->Session->setFlash($success);
-        }
-        }
- 
+            }
+        }       
+                 
     }
+    
+    
+    protected function _newAvatar($image){
+        
+        $playerId = $this->Session->read('PlayerId');
+        if($image){
+            $type=explode('/', $image['type']);
+            //check image type is png
+            if($type[1]=='png' && $type[0]=='image'){
+                //check image size is less than 1mo
+                if($image['size']<1048576){
+                    //name image with the playerId
+                    $destination='avatars/'.$playerId.'.'.$type[1];
+                    move_uploaded_file($image['tmp_name'], $destination);
+                    return true;
+                }else return false;
+            }else return false;
+        }else return false;
+    }  
     
     /**
      * 
