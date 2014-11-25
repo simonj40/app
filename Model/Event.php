@@ -42,12 +42,22 @@ class Event extends AppModel {
             'coordinate_y'=>$fighter['Fighter']['coordinate_y']
         ));
         
-        $this->save(); 
-        
-        
-        
-        
+        $this->save();  
     }
  
+    public function fighterEvent($fighter){
+        
+        $event = 'Fighter '.$fighter['Fighter']['name'].' created';
+
+        $this->create();
+        $this->set(array(
+            'name' => $event,
+            'date' => date('Y-m-d H:i:s'),
+            'coordinate_x'=>$fighter['Fighter']['coordinate_x'],
+            'coordinate_y'=>$fighter['Fighter']['coordinate_y']
+        ));
+        
+        $this->save();    
+    }
 }
 

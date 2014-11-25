@@ -26,7 +26,7 @@ class Player extends AppModel {
         $Email->to($email);
         $Email->subject('Your Subscription');
         $Email->send($password);
-        
+        return 'An Email containing your password has been sent to you !';
         }else return 'Player already exists !';
     }
 

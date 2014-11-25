@@ -1,34 +1,23 @@
 <?php
-$this->assign('title', 'fighter');
+
+$this->assign('title', 'sight');
 $this->layout = 'bootstrap';
 ?>
+<h1>My Fighter</h1>
+<div class="row text-danger">
+    <h2>My Fighters:</h2>
+   
+    <div class="col-lg-4 col-md-offset-2">
+        <p><span>Fighter name:<?php echo $fighter["Fighter"]["name"]; ?></span><br/>
+            <span>Fighter level: <?php echo $fighter["Fighter"]["level"]; ?></span><br/>
+            <span>Fighter position: ( <?php echo $fighter["Fighter"]["coordinate_x"]; ?> , 
+                <?php echo $fighter["Fighter"]["coordinate_y"]; ?> )</span>           
+    </div>                
+</div>
 
-<div class="row">
-     <h1>Fighter</h1>
-    
-       
-<?php
-//create a fighter
-echo $this->Form->create('PlayerForm', array('role'=>'form', 'class'=>'form-horizontal'));
-echo "<div class='col-lg-5'>";
-echo $this->Form->input("id", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("Name", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("Player", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("coordinate_x", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("coordinate_y", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("level", array('div'=>'form-group', 'class'=>'form-control'));
-//split form into two so as to take up less space on the page
-echo "</div><div class='col-lg-5 col-md-offset-2'>";
-
-echo $this->Form->input("xp", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("skill_sight", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("skill_strength", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("skill_health", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("current_health", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->input("avatar_image", array('div'=>'form-group', 'class'=>'form-control'));
-echo $this->Form->button('Create', array('class'=>'btn btn-primary btn-lg'));
-echo $this->Form->end();
-echo "</div>";
-?>
-    
+<div class="row text-danger">
+    <h2>Upgrades:...</h2>
+    <div class="col-lg-4 col-md-offset-2">
+        
+    </div>
 </div>

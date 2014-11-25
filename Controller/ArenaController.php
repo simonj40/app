@@ -19,7 +19,6 @@ class ArenaController extends AppController
         $login = $this->Session->read('Connected');
         $method = $this->request->params['action'];   
 
-        pr($login);
         if($login==NULL && $method!='login' && $method!='signin' && $method!='forgot' && $method!='recover'){
             $this->redirect(array('controller' => 'Arena', 'action' => 'login'));
         }
@@ -42,11 +41,12 @@ class ArenaController extends AppController
     public function login()
     {   
         $login;
-        
         if ($this-> request-> is ('post')){
                $login=$this->Player->checkLogin( $this->request->data['Login']['Email'], $this->request->data['Login']['Password'] );
                if($login){
                    $this->Session->write('Connected', $this->request->data['Login']['Email']);
+                   $player = $this->Player->findPlayer($this->request->data['Login']['Email']);
+                   $this->Session->write('PlayerId',$player['Player']['id']);
                    $this->redirect(array('controller' => 'Arena', 'action' => 'index'));
                }
                else $this->Session->setFlash('Failed !');
@@ -57,41 +57,82 @@ class ArenaController extends AppController
     public function logout(){
         
         $this->Session->delete('Connected');
+        $this->Session->delete('PlayerId');
         $this->redirect(array('controller' => 'Arena', 'action' => 'login'));
     }
     
     /**
-     * @todo Implement the Event management function in the Model Event consequently to a move of an attack
+     * @todo implement the view with the other fighter on the board
      */
     public function sight()
     {
-        $components = array( 'Session' );
-        $this->Session->setFlash('Une action a été réalisée.');
-        $this->set('fighters', $this->Fighter->find('all'));
-        $fighterId=1;
+        //$components = array( 'Session' );
+        $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+        if(!empty($fighter)){
+            $this->set('fighter', $fighter);
+            $fighterId=$fighter['Fighter']['id'];
+            if ($this-> request-> is ('post')){ 
+                if($this->request->data('Fightermove')!=NULL && $this->request->data('Fightermove')!=''){
+                    $success = $this->Fighter->doMove($fighterId,$this->request->data['Fightermove']); 
 
-        if ($this-> request-> is ('post')){
-            
-            if($this->request->data('Fightermove')!=NULL && $this->request->data('Fightermove')!=''){
-                $this->Fighter->doMove($fighterId,$this->request->data['Fightermove']); 
-                //Set Event
-                $fighter = $this->Fighter->findById($fighterId);
-                $this->Event->moveEvent($fighter);
+                    if($success){
+                        //Set Event
+                        $fighter = $this->Fighter->findById($fighterId);
+                        $this->Event->moveEvent($fighter);
+                        $this->Session->setFlash('Move succeed !');
+                    }else $this->Session->setFlash('Move Not Possible...');
 
-            }else if($this->request->data('Fighterattack')!=NULL && $this->request->data('Fighterattack')!=''){
-                $this->Fighter->doAttack($fighterId,$this->request->data['Fighterattack']);
-                //Set Event
-                $this->Event->moveAttack($fighter);
+                }else if($this->request->data('Fighterattack')!=NULL && $this->request->data('Fighterattack')!=''){
+                    $success = $this->Fighter->doAttack($fighterId,$this->request->data['Fighterattack']);
+                    //Set Event
+                    $this->Event->attackEvent($fighter);
+                    $this->Session->setFlash($success);
+                }
             }
+
+            $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+            $this->set('fighter', $fighter);
+        }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighterForm'));
+
+    }
+    
+    /**
+     *@todo implement level upgrade adn skills etc ...
+     */
+    public function fighter()
+    {    
+        $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+        if(!empty($fighter)){
+            $this->set('fighter',$fighter);
+            
+        }else{
+            $this->redirect(array('controller' => 'Arena', 'action' => 'fighterForm'));
         }
 
     }
     
-    
-    public function fighter()
-    {
-        $this->set('raw',$this->Fighter->find());
-		//changes
+    /**
+     * @todo Implement the Avavtar download and file namng with the fighter id
+     */
+    public function fighterForm()
+    {   
+        $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+        
+        if(!empty($fighter)){
+            $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
+            
+        }else{
+            if ($this-> request-> is ('post')){
+            $success = $this->Fighter->newFighter( $this->Session->read('PlayerId'), $this->request->data['Fighter']['Name'] );
+            if($success=='true'){
+                $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+                $this->Event->fighterEvent($fighter);
+                
+                $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
+            }else $this->Session->setFlash($success);
+        }
+        }
+ 
     }
     
     /**

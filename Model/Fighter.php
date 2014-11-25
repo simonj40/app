@@ -3,6 +3,9 @@
 App::uses('AppModel', 'Model');
 
 class Fighter extends AppModel {
+    
+    public $boardX=15;
+    public $boardY=10;
 
     public $displayField = 'name';
     public $belongsTo = array(
@@ -38,12 +41,13 @@ class Fighter extends AppModel {
             $coordinate_x-= 1;
         }
         
-        if(!$this->occupied($coordinate_x,$coordinate_y)){ 
-            $this->set('coordinate_y',$coordinate_x);
+        if(!$this->occupied($coordinate_x,$coordinate_y) && !$this->outOfBounds($coordinate_x,$coordinate_y)){ 
+            $this->set('coordinate_x',$coordinate_x);
             $this->set('coordinate_y',$coordinate_y);
             $this->set('next_action_time',date('Y-m-d H:i:s'));
             $this->save();
-        }
+            return true;
+        }else return false;
 
     }
     
@@ -95,19 +99,19 @@ class Fighter extends AppModel {
         
         if($victim==NULL){
             //NO VICTIM FOUND
-            pr("NO VICTIM FOUND...");
+            return 'NO VICTIM FOUND...';
         }else{
             //Calculate limit value
             $limit=10 + $victim['Fighter']['level'] - $fighter['Fighter']['level'];
             //If the attack suceed 
             if(rand(1,20)>$limit){      
-                pr("ATTACK SUCCEDD !");
                 //change...
                 $this->attackSuceed($fighter,$victim);
                 //update fighter level...
                 $this->addLevel($fighter);
+                return 'ATTACK SUCCEDD !';
             }else{
-                pr("ATTACK FAILED !");
+                return 'ATTACK FAILED !';
             }
 
         }
@@ -148,10 +152,7 @@ class Fighter extends AppModel {
         
     }
     
-        public function createPlayer(){
-        $this->set("id",$this->request->data["id"]);
-    }
-    
+
     public function addLevel($fighter) {
         //get total experience points from database
         $this->read(null,$fighter['Fighter']['id']);
@@ -159,12 +160,85 @@ class Fighter extends AppModel {
         $this->set('level', round (($this->data['Fighter']['xp'])/4 ));        
     }
 
-    public function doProtectBoundary($x, $y) {
+    public function outOfBounds($x, $y) {
+        if($x>=$this->boardX || $y>=$this->boardY || $x<0 || $y<0 ) return true;
+        else return false;
+    }
+
+    
+    public function findPlayersFighter($playerId){
+        $condition=array(
+            'player_id'=>$playerId,
+                );
+        //Find the eventual victim in the database
+        $fighter=$this->find( 'first', array( 'conditions' => $condition ) );
+        return $fighter;
+    }
+
+    public function nameExist($name){
+        
+        $condition=array(
+            'name'=>$name,
+                );
+        //Find the eventual victim in the database
+        $fighter=$this->find( 'first', array( 'conditions' => $condition ) );
+        
+        if(empty($fighter)) return false;
+        else return true;
+    }
+    
+    public function generateXY(){
+        $occupied=true;
+        $x;
+        $y;
+        while($occupied){
+            $x = rand(0, $this->boardX-1);
+            $y = rand(0, $this->boardY-1);
+            $occupied = $this->occupied($x,$y);
+            $outOfBound =$this->outOfBounds($x,$y);
+            $occupied = $occupied && !$outOfBound;
+
+        }
+        
+        $coordinates = array(
+            'x'=>$x,
+            'y'=>$y
+             );
+            
+        return $coordinates;
         
     }
 
-    public function doProtectOcupiedSpace() {
+    public function newFighter($playerId, $name){
+        $error = 'Fighter with the name '.$name.' already exists';
+        
+        if($this->nameExist($name)) return $error;
+        else{
+            
+            $coordinates = $this->generateXY();
+            $this->create();
+            $this->set(array(
+            'name' => $name,
+            'player_id' => $playerId,
+            'coordinate_x'=>$coordinates['x'],
+            'coordinate_y'=>$coordinates['y'],
+            'level'=>1,
+            'xp'=>0,
+            'skill_sight'=>0,
+            'skill_strength'=>1,
+            'skill_health'=>0,
+            'current_health'=>3,
+            'next_action_time'=>0,
+            ));
+            $this->save();  
+            
+            return 'true';
+        
+        }
+        
+        
         
     }
-
+    
+    
 }
