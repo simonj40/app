@@ -34,7 +34,6 @@ class ArenaController extends AppController
     {
         $login = $this->Session->read('Connected');
         $this->set('myname', $login);
-
     }
     /**
      * @todo
@@ -102,9 +101,12 @@ class ArenaController extends AppController
      */
     public function fighter()
     {    
-        $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+        $playerId = $this->Session->read('PlayerId');
+        $fighter = $this->Fighter->findPlayersFighter($playerId);
         if(!empty($fighter)){
             $this->set('fighter',$fighter);
+            $this->set('avatar','avatars/'.$playerId.'.png');
+            
             
         }else{
             $this->redirect(array('controller' => 'Arena', 'action' => 'fighter_form'));
@@ -116,46 +118,46 @@ class ArenaController extends AppController
      * @todo Implement the Avavtar download and file namng with the fighter id
      */
     public function fighter_form()
-    {   //to delete after test
-        //$this->_newAvatar($this->request->data['Fighter']['Avatar']);
+    {   
+        $playerId = $this->Session->read('PlayerId');
+        $fighter = $this->Fighter->findPlayersFighter($playerId);
         
-        $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
         if(!empty($fighter)){
             $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
-        }else{
-            if ($this-> request-> is ('post')){
-                if($this->newAvatar($this->request->data['Fighter']['Avatar'])){
-                    $success = $this->Fighter->newFighter( $this->Session->read('PlayerId'), $this->request->data['Fighter']['Name'] );
-                    if($success=='true'){
-                    $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
-                    $this->Event->fighterEvent($fighter);
-
-                    $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
-                    }else $this->Session->setFlash($success);
-                }
-                
-            }
-        }       
-                 
+        }else if($this-> request-> is ('post')){
+            
+            $name = $this->request->data['Fighter']['Name'];
+            $image = $this->request->data['Fighter']['Avatar'];
+            //check if fighter name exists 
+            if(!$this->Fighter->nameExist($name) && $name!=''){
+                //check is avatar field is not empty
+                if($image['error']==0){
+                    //check if image format fits
+                   if($image['size']<1048576 && $image['type']=='image/png'){
+                       //Create fighter
+                       $this->Fighter->newFighter($playerId, $name);
+                       //Create avatar
+                       $this->_newAvatar($image);
+                       //Create Event
+                       $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+                       $this->Event->fighterEvent($fighter);
+                       //redirect to fighter page
+                       $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
+                   }else $this->Session->setFlash('Avatar image not accepted...');
+                }else $this->Session->setFlash('Avavtar field empty...');
+            }else $this->Session->setFlash('Fighter with the name '.$name.' already exists');   
+        }
     }
     
+
     
     protected function _newAvatar($image){
         
         $playerId = $this->Session->read('PlayerId');
-        if($image){
-            $type=explode('/', $image['type']);
-            //check image type is png
-            if($type[1]=='png' && $type[0]=='image'){
-                //check image size is less than 1mo
-                if($image['size']<1048576){
-                    //name image with the playerId
-                    $destination='avatars/'.$playerId.'.'.$type[1];
-                    move_uploaded_file($image['tmp_name'], $destination);
-                    return true;
-                }else return false;
-            }else return false;
-        }else return false;
+        $type=  explode('/',$image['type']);
+        $destination='img/avatars/'.$playerId.'.'.$type[1];
+        move_uploaded_file($image['tmp_name'], $destination);
+        
     }  
     
     /**

@@ -141,6 +141,8 @@ class Fighter extends AppModel {
             $this->save();
             //delete the victim from the database
             $this->delete($victim['Fighter']['id']);
+            //delete its avatar
+            $this->deleteAvatar($victim['Fighter']['player_id']);
             
         }else{
             $this->save();
@@ -152,7 +154,12 @@ class Fighter extends AppModel {
         
     }
     
-
+    public function deleteAvatar($playerId){     
+        $avatarPath = WWW_ROOT.'img/avatars/'.$playerId.'.png';
+        unlink($avatarPath); 
+    } 
+    
+    
     public function addLevel($fighter) {
         //get total experience points from database
         $this->read(null,$fighter['Fighter']['id']);
@@ -210,34 +217,24 @@ class Fighter extends AppModel {
     }
 
     public function newFighter($playerId, $name){
-        $error = 'Fighter with the name '.$name.' already exists';
-        
-        if($this->nameExist($name)) return $error;
-        else{
-            
+
             $coordinates = $this->generateXY();
             $this->create();
             $this->set(array(
-            'name' => $name,
-            'player_id' => $playerId,
-            'coordinate_x'=>$coordinates['x'],
-            'coordinate_y'=>$coordinates['y'],
-            'level'=>1,
-            'xp'=>0,
-            'skill_sight'=>0,
-            'skill_strength'=>1,
-            'skill_health'=>0,
-            'current_health'=>3,
-            'next_action_time'=>0,
+                'name' => $name,
+                'player_id' => $playerId,
+                'coordinate_x'=>$coordinates['x'],
+                'coordinate_y'=>$coordinates['y'],
+                'level'=>1,
+                'xp'=>0,
+                'skill_sight'=>0,
+                'skill_strength'=>1,
+                'skill_health'=>0,
+                'current_health'=>3,
+                'next_action_time'=>date('Y-m-d H:i:s'),
             ));
             $this->save();  
-            
-            return 'true';
-        
-        }
-        
-        
-        
+
     }
     
     

@@ -14,6 +14,10 @@ $this->layout = 'bootstrap';
                 <?php echo $fighter["Fighter"]["coordinate_y"]; ?> )</span>           
     </div>                
 </div>
+<div class="row text-danger">
+    
+   <?php echo $this->Html->image($avatar, array('alt' => 'CakePHP')); ?>        
+</div>
 
 <div class="row text-danger">
     <h2>Upgrades:...</h2>
