@@ -2,7 +2,6 @@
 
 App::uses('AppController', 'Controller');
 
-
 /**
  * Main controller of our small application
  *

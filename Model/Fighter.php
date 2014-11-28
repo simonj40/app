@@ -6,6 +6,7 @@ class Fighter extends AppModel {
     
     public $boardX=15;
     public $boardY=10;
+    public $time_before_disconnected = 5;
 
     public $displayField = 'name';
     public $belongsTo = array(
@@ -18,6 +19,21 @@ class Fighter extends AppModel {
         ),
     );
 
+    
+    public function update_next_action_time($playerId){
+
+        
+        $condition=array(
+            'player_id'=>$playerId,
+                );
+        
+        $fighter=$this->find( 'first', array( 'conditions' => $condition ) );
+        $this->read(null,$fighter['Fighter']['id']);
+        $this->set('next_action_time',date('Y-m-d H:i:s'));
+        $this->save();
+    }
+    
+    
      /**
      * 
      * @param type $fighterId
@@ -89,11 +105,16 @@ class Fighter extends AppModel {
             $victimeCoordinates['x']--;
         }
         
+        $time = time() - $this->time_before_disconnected;
+        $date = date('Y-m-d H:i:s', $time);
+        
         //Define search condition in the database
         $condition=array(
             'coordinate_x'=>$victimeCoordinates['x'],
-            'coordinate_y'=>$victimeCoordinates['y']
+            'coordinate_y'=>$victimeCoordinates['y'],
+            'next_action_time >'=>$date
                 );
+        
         //Find the eventual victim in the database
         $victim=$this->find( 'first', array( 'conditions' => $condition ) );
         

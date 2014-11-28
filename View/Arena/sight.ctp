@@ -1,7 +1,7 @@
 <?php
-
-$this->assign('title', 'sight');
-$this->layout = 'bootstrap';
+    $this->assign('title', 'sight');
+    $this->layout = 'bootstrap';
+    echo $this->Html->script('board');
 ?>
 <h1>Sight</h1>
 <div class="row text-danger">
@@ -49,8 +49,17 @@ $this->layout = 'bootstrap';
         <table>
            
                
-                   <?php  for($i=0; $i<10; $i++){echo "<tr></tr>";
-                     for($j=0; $j<15;$j++){ echo "<td></td>";  }} ?>
+                   <?php  
+                   
+                        for($j=9; $j>=0; $j--){
+                            echo "<tr></tr>";
+                            for($i=0; $i<15;$i++){      
+                                $id = $i.'_'.$j;
+                                echo "<td id='".$id."'></td>";  
+                            } 
+                        } 
+                     
+                    ?>
                   
              
         </table>
