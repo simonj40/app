@@ -11,8 +11,14 @@ class Event extends AppModel {
      */
     public function diary(){
 
-        return $this->find('all');
-        
+        $time = time() - 3600*24;
+        $date = date('Y-m-d H:i:s', $time);
+        //search conditions
+        $conditions = array(
+            "date >" => $date,
+                );
+        //retrieve all active fighters
+        return $this->find("all", array('conditions' => $conditions));
     }
     
     public function moveEvent($fighter){
@@ -44,12 +50,12 @@ class Event extends AppModel {
         
         $this->save();  
     }
+    
  
-    public function fighterEvent($fighter){
-        
-        $event = 'Fighter '.$fighter['Fighter']['name'].' created';
+    public function newEvent($event, $fighter){
 
         $this->create();
+        
         $this->set(array(
             'name' => $event,
             'date' => date('Y-m-d H:i:s'),

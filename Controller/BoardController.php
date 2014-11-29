@@ -95,21 +95,22 @@ class BoardController extends AppController
         
         $this->autoRender = false; // We don't render a view in this example
         $this->request->onlyAllow('ajax'); // No direct access via browser URL
-        $response = '';
+        $message = '';
 
         $playerId = $this->Session->read('PlayerId');  
         $fighter = $this->Fighter->findPlayersFighter($playerId);
+        
         $direction = $this->request->data['direction'];
         
         if(!empty($fighter)){
             $fighterId = $fighter['Fighter']['id'];  
-            $success = $this->Fighter->doAttack($fighterId,$direction);
+            $response = $this->Fighter->doAttack($fighter,$direction);
             //Set Event
-            $this->Event->attackEvent($fighter);  
-            $response = $success;
-        }else $response = 'ATTACK FAILED !';
-
-            $this->response->body($response);
+            $this->Event->newEvent($response[1],$fighter);  
+            $message = $response[0];
+        }else $message = 'An Error Occured...';
+        
+            $this->response->body($message);
     }
     
 }

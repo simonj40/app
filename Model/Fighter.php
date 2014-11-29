@@ -85,14 +85,15 @@ class Fighter extends AppModel {
      * @param type $fighterId
      * @param type $direction
      */
-    public function doAttack($fighterId, $direction){
-        //get the fighter
-        $fighter=$this->findById($fighterId);
+    public function doAttack($fighter, $direction){
         //Initialize the victim's coordinates with the fighter coordinates
         $victimeCoordinates= Array(
             'x'=>$fighter['Fighter']['coordinate_x'],
             'y'=>$fighter['Fighter']['coordinate_y']
         );
+        
+        $event = '';
+        $message = '';
 
         //Calculate the victime coordinates according to the attack move
         if($direction=='north'){
@@ -120,7 +121,8 @@ class Fighter extends AppModel {
         
         if($victim==NULL){
             //NO VICTIM FOUND
-            return 'NO VICTIM FOUND...';
+            $event = $fighter['Fighter']['name'].' attacked '.' but no victim was found';
+            $message = 'NO VICTIM FOUND...';
         }else{
             //Calculate limit value
             $limit=10 + $victim['Fighter']['level'] - $fighter['Fighter']['level'];
@@ -130,17 +132,22 @@ class Fighter extends AppModel {
                 $this->attackSuceed($fighter,$victim);
                 //update fighter level...
                 $this->addLevel($fighter);
-                return 'ATTACK SUCCEDD !';
+                
+                $event = $fighter['Fighter']['name'].' attacked '.$victim['Fighter']['name'].' and succeed';
+                
+                $message = 'ATTACK SUCCEDD !';
             }else{
-                return 'ATTACK FAILED !';
+                $event = $fighter['Fighter']['name'].' attacked '.$victim['Fighter']['name'].' and failed';
+                
+                $message = 'ATTACK FAILED !';
             }
 
         }
-
-        //Set next_action_time in the data base for the user
-        $this->read(null,$fighter['Fighter']['id']);
-        $this->set('next_action_time',date('Y-m-d H:i:s'));
-        $this->save();
+        
+        $response = array($message,$event);
+        
+        return $response;
+        
     }
     
         /**
