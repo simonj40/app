@@ -70,6 +70,9 @@ class ArenaController extends AppController
         if(!empty($fighter)){
             $this->set('fighter', $fighter);
             $fighterId=$fighter['Fighter']['id'];
+            
+            //Not used. Replaced by ajax calls to the BoardController
+            /*
             if ($this-> request-> is ('post')){ 
                 if($this->request->data('Fightermove')!=NULL && $this->request->data('Fightermove')!=''){
                     $success = $this->Fighter->doMove($fighterId,$this->request->data['Fightermove']); 
@@ -88,12 +91,18 @@ class ArenaController extends AppController
                     $this->Session->setFlash($success);
                 }
             }
+             * 
+             */
 
             $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
             $this->set('fighter', $fighter);
         }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighter_form'));
 
     }
+    
+    
+    
+    
     
     /**
      *@todo implement level upgrade adn skills etc ...

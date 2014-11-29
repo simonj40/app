@@ -44,5 +44,59 @@ class BoardController extends AppController
         $this->response->body($json);
 
     }
+    
+    public function move(){
+        
+        $this->autoRender = false; // We don't render a view in this example
+        $this->request->onlyAllow('ajax'); // No direct access via browser URL
+        $response = '';
 
+        $playerId = $this->Session->read('PlayerId');  
+        $fighter = $this->Fighter->findPlayersFighter($playerId);
+        $direction = $this->request->data['direction'];
+       
+        if(!empty($fighter)){
+            $fighterId=$fighter['Fighter']['id'];           
+            $success = $this->Fighter->doMove($fighterId, $direction);
+            if($success){
+                        //Set Event
+                        $fighter = $this->Fighter->findById($fighterId);
+                        $this->Event->moveEvent($fighter);
+                        $response = 'Move succeed !';
+            }else $response = 'Move Not Possible...';
+        }
+            $this->response->body($response);
+         
+    }
+    
+    public function attack(){
+        
+        $this->autoRender = false; // We don't render a view in this example
+        $this->request->onlyAllow('ajax'); // No direct access via browser URL
+        $response = '';
+
+        $playerId = $this->Session->read('PlayerId');  
+        $fighter = $this->Fighter->findPlayersFighter($playerId);
+        $direction = $this->request->data['direction'];
+        
+        if(!empty($fighter)){
+            $fighterId = $fighter['Fighter']['id'];  
+            $success = $this->Fighter->doAttack($fighterId,$direction);
+            //Set Event
+            $this->Event->attackEvent($fighter);  
+            $response = $success;
+        }else $response = 'ATTACK FAILED !';
+
+            $this->response->body($response);
+    }
+    
 }
+
+
+
+
+
+
+
+
+

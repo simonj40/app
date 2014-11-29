@@ -4,11 +4,70 @@ var fighters0 = [];
 var fighters1 = [];
 //Time before board refresh
 var time_before_refresh = 0;
+var time_before_message_erase = 5000;
 
 
 $(function(){ 
-           ajax_board();   
+    
+    ajax_board();   
+    
+    
+    $("[type='button']").on( "click", function() {
+        var action = $(this).attr("action");
+        if( action == 'move') move($(this).attr("value"));
+        if( action == 'attack') attack($(this).attr("value"));
+     });
+     
+     
+           
 });
+
+
+function move(direction){
+
+    $.ajax({
+	       type: "POST",
+	       url: "/WebArenaGoupSI1-04-BE/Board/move",
+               data : { direction : direction},
+               dataType: "text",
+	       success: function(data){
+                   message('#moveMessage',data);
+               },
+	       error: function (error){
+	       }
+    });
+    
+}
+
+function attack(direction){
+
+    $.ajax({
+	       type: "POST",
+	       url: "/WebArenaGoupSI1-04-BE/Board/attack",
+               data : { direction : direction},
+               dataType: "text",
+	       success: function(data){
+                   console.log(data);
+                   message('#attackMessage',data);
+               },
+	       error: function (error){
+	       }
+    }); 
+}
+
+
+function message(id,message){  
+    if(message.length){
+        $(id).text(message);
+        setTimeout(function() 
+        {
+           $(id).empty();
+        }, time_before_message_erase);
+    }
+    
+    
+}
+
 
 function update_board(data){
     //save the new fighters list
@@ -108,6 +167,7 @@ function set_avatar(fighter){
     $(id).html(img);
     
 }
+
 
 
 
