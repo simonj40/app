@@ -11,6 +11,7 @@ App::uses('AppController', 'Controller');
 class BoardController extends AppController
 {
     
+    
     public $uses = array('Player', 'Fighter', 'Event');
     
     public $time_before_disconnected = 5;
@@ -23,26 +24,47 @@ class BoardController extends AppController
         
         //Update next_action_time
         $playerId = $this->Session->read('PlayerId');  
-        
         $this->Fighter->update_next_action_time($playerId);
         
+        //retrieve my fighter
+        $conditions1 = array("player_id" => $playerId);
+        $myFighter = $this->Fighter->find('first', array('conditions' => $conditions1));
+        $sight = $myFighter['Fighter']['skill_sight'];
+        $sight++;
+        $x = $myFighter['Fighter']['coordinate_x'];
+        $y = $myFighter['Fighter']['coordinate_y'];
+        
+        //time condition
         $time = time() - $this->time_before_disconnected;
         $date = date('Y-m-d H:i:s', $time);
-
-        $conditions = array("next_action_time >" => $date);
-
-        $fighters = $this->Fighter->find("all", array('conditions' => $conditions));
+        //search conditions
+        $conditions2 = array(
+            "next_action_time >" => $date,
+                );
+        //retrieve all active fighters
+        $fighters = $this->Fighter->find("all", array('conditions' => $conditions2));
 
         $fighters_array = array();
+        //Field the array to be sent with all active visible fighters
+        foreach ($fighters as $fighter) {
+            $fighter_x = $fighter['Fighter']['coordinate_x'];
+            $fighter_y = $fighter['Fighter']['coordinate_y'];
 
-        foreach ($fighters as $fighter) {   
-            array_push($fighters_array, $fighter['Fighter']);
+            //check if fighter is at my fighter sight
+            if($fighter_x <= $x+$sight && $fighter_x >= $x-$sight){
+                if($fighter_y <= $y+$sight && $fighter_y >= $y-$sight){
+                    array_push($fighters_array, $fighter['Fighter']);
+                }
+            }  
         }
+        
+        
 
+        
         $json = json_encode($fighters_array);
         
         $this->response->body($json);
-
+        
     }
     
     public function move(){

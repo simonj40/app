@@ -65,37 +65,13 @@ class ArenaController extends AppController
      */
     public function sight()
     {
-        //$components = array( 'Session' );
+        
         $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+        
         if(!empty($fighter)){
-            $this->set('fighter', $fighter);
             $fighterId=$fighter['Fighter']['id'];
+            $this->set('fighterId', $fighterId);
             
-            //Not used. Replaced by ajax calls to the BoardController
-            /*
-            if ($this-> request-> is ('post')){ 
-                if($this->request->data('Fightermove')!=NULL && $this->request->data('Fightermove')!=''){
-                    $success = $this->Fighter->doMove($fighterId,$this->request->data['Fightermove']); 
-
-                    if($success){
-                        //Set Event
-                        $fighter = $this->Fighter->findById($fighterId);
-                        $this->Event->moveEvent($fighter);
-                        $this->Session->setFlash('Move succeed !');
-                    }else $this->Session->setFlash('Move Not Possible...');
-
-                }else if($this->request->data('Fighterattack')!=NULL && $this->request->data('Fighterattack')!=''){
-                    $success = $this->Fighter->doAttack($fighterId,$this->request->data['Fighterattack']);
-                    //Set Event
-                    $this->Event->attackEvent($fighter);
-                    $this->Session->setFlash($success);
-                }
-            }
-             * 
-             */
-
-            $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
-            $this->set('fighter', $fighter);
         }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighter_form'));
 
     }

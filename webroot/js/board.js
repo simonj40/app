@@ -5,9 +5,13 @@ var fighters1 = [];
 //Time before board refresh
 var time_before_refresh = 0;
 var time_before_message_erase = 5000;
-
+//Fighter's player
+var myFighter;
+var myFighterId;
 
 $(function(){ 
+    
+    myFighterId = $("#myFighter").attr("fighterId");
     
     ajax_board();   
     
@@ -17,8 +21,6 @@ $(function(){
         if( action == 'move') move($(this).attr("value"));
         if( action == 'attack') attack($(this).attr("value"));
      });
-     
-     
            
 });
 
@@ -84,6 +86,9 @@ function update_board(data){
     //for each fighter from the new list
     $.each(fighters1, function( index1, fighter1 ) {   
         isNew = true;
+        //if my fighter then update its info
+        if(fighter1.id == myFighterId) update_myFighter(fighter1);
+
         //if the old list exists (not initialization)
         if(fighters0.length>0){ 
             //for each fighter from the old list
@@ -168,6 +173,22 @@ function set_avatar(fighter){
     
 }
 
+
+function update_myFighter(fighter){
+    
+    var guild;
+    if(fighter.guild_id == null) guild = 'none';
+    
+    $('#fighter_name').text(fighter.name);
+    $('#fighter_guild').text(guild);
+    $('#fighter_level').text(fighter.level);
+    $('#fighter_xp').text(fighter.xp);
+    $('#fighter_c_health').text(fighter.current_health);
+    $('#fighter_health').text(fighter.skill_health);
+    $('#fighter_sight').text(fighter.skill_sight);
+    $('#fighter_strength').text(fighter.skill_strength);
+
+}
 
 
 

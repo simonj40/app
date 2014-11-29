@@ -12,14 +12,24 @@ table, tr, td {
    border: 1px solid black;
 }
 
-td{
+#boardTable  td{
     height: 60px; 
     width: 70px;   
     text-align: center;
 }
 
-td img{
+img{
+    height: 60px; 
+    width: 70px;
+}
+    
+#boardTable  td{
     
     height: 60px; 
     width: 70px;  
 }
+
+#myFighterTable th{
+    display :none;  
+}
+
