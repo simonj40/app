@@ -17,7 +17,7 @@ $(function(){
         var action = $(this).attr("action");
         if( action == 'move') move($(this).attr("value"));
         if( action == 'attack') attack($(this).attr("value"));
-        if( action == 'send') send_message();
+        if( action == 'yell') yell($('#yell_text').val());
      });
 
     ajax_board();   
@@ -25,26 +25,22 @@ $(function(){
 });
 
 
-function send_message(){
-    
-    var fighterTo = $('#fighters_select option:selected').attr('value');
-    var title = $('#message_title').val();
-    var message = $('#message_text').val();
-    
+function yell(yelling){
+    console.log(yelling);
     
     $.ajax({
 	       type: "POST",
-	       url: "/WebArenaGoupSI1-04-BE/Board/message",
-               data : { fighterTo : fighterTo, title : title, message : message},
+	       url: "/WebArenaGoupSI1-04-BE/Board/yell",
+               data : { yelling : yelling},
                dataType: "text",
 	       success: function(data){
-                   $('#messages_box').text('You : ' + message);
+                   message('#yellMessage',data);
                },
 	       error: function (error){
 	       }
     });
     
-  
+    
 }
 
 

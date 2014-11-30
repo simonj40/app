@@ -25,6 +25,28 @@ class ArenaController extends AppController
     }
     
     /**
+     * 
+     */
+    public function messages()
+    {   
+        $events=$this->Event->diary();
+        $this->set('events',$events);  
+        
+        $fighters = $this->Fighter->find('all');
+        $this->set('fighters',$fighters);
+        
+        $playerId = $this->Session->read('PlayerId');  
+        $fighter = $this->Fighter->findPlayersFighter($playerId);
+        $fighterId=$fighter['Fighter']['id'];
+        $this->set('fighterId', $fighterId);
+        
+        
+    }
+    
+    
+    
+    
+    /**
      * index method : first page
      *
      * @return void
@@ -70,6 +92,7 @@ class ArenaController extends AppController
         $fighters = $this->Fighter->find('all');
         $this->set('fighters',$fighters);
         
+        //retrieve last 24h messages
         $time = time() - 3600*24;
         $date = date('Y-m-d H:i:s', $time);
         $conditions = array(

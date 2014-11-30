@@ -26,7 +26,7 @@
         </div>  
         <div class="row"> <h2>Actions:</h2>
         <h3>Move</h3>
-        <div id='moveMessage'></div>
+        <div id="moveMessage"></div>
         <div class="btn" role="group">
             <div><button type="button" action="move" class="btn btn-default" value='north' >North</button></div>
             <button type="button" action="move" class="btn btn-default" value='west' >West</button>
@@ -37,56 +37,43 @@
         </div>
          <div class="row ">  
              <h3>Attack</h3>
-             
-             <div id='attackMessage'></div>
+             <div id="attackMessage"></div>
             <div class="btn" role="group">
                 <div><button type="button" action="attack" class="btn btn-default" value='north' >North</button></div>
                 <button type="button" action="attack" class="btn btn-default" value='west' >West</button>
                 <button type="button" action="attack" class="btn btn-default" value='east' >East</button>
                 <div><button type="button" action="attack" class="btn btn-default" value='south' >South</button></div>
             </div>
-
         </div>
         <div class="row ">  
-             <h3>Messages</h3>
-             
-             <div id='messages_box'>
-                 <ul>
-                     <?php foreach ($fighters as $fighter): ?>
-                        <li>
-                            <?php echo $fighter['Fighter']['name']; ?> 
-                        </li>
-                           
-                                          
-                     <?php endforeach; ?>
-                 </ul>
-                 
-                 
-             </div>
-            <div id='new_message'>
-                <form>
-                    <label>Fighter</label><br>
-                    <select id='fighters_select'>
-                        <?php foreach ($fighters as $fighter): ?>
-                            <option value="<?php echo $fighter['Fighter']['id'] ?>">
-                                    <?php echo $fighter['Fighter']['name']; ?>       
-                        <?php endforeach; ?>
-                    </select><br>
-                    <label>Title</label><br>
-                    <input type="text" id="message_title"><br>
-                    <label>Message</label><br>
-                    <input type="text" id="message_text"><br>
-                    <input value='Send' type="button" action="send">
-                </form>
-            </div>
+             <h3>Yell</h3>
+             <div id="yellMessage"></div>
+             <form class="form-horizontal">
+                <fieldset>
+                <!-- Text input-->
+                <div class="form-group">  
+                  <div class="">
+                  <input id="yell_text" name="textinput" type="text" placeholder="My Yell" class="form-control input-md">
+                  </div>
+                </div>
+
+                <!-- Button -->
+                <div class="form-group">  
+                  <div class="">
+                    <button type="button" name="singlebutton" class="btn btn-primary" action="yell">Yell !</button>
+                  </div>
+                </div>
+
+                </fieldset>
+            </form>
+
         </div>
-    </div>                
+</div>              
  <div class="col-md-9">
     <h2>Board Game:</h2> 
     <div id='boardTable'>
         <table>
                    <?php  
-                   
                         for($j=9; $j>=0; $j--){
                             echo "<tr></tr>";
                             for($i=0; $i<15;$i++){      
@@ -94,7 +81,6 @@
                                 echo "<td id='".$id."'></td>";  
                             } 
                         } 
-                     
                     ?>             
         </table>
     </div>     

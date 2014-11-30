@@ -2,7 +2,7 @@
 $this->layout = 'bootstrap';
 ?>
 <h1>Diary</h1>
-<div>
+<div id='diary_box'>
     <?php foreach ($events as $event): ?>
         <ul>
             <li>
@@ -11,6 +11,5 @@ $this->layout = 'bootstrap';
                 ( <?php echo $event["Event"]["coordinate_x"] ?> , <?php echo $event["Event"]["coordinate_y"] ?> )                    
             </li>
         </ul>
-
     <?php endforeach; ?>
 </div>

@@ -18,7 +18,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
         </title>
     <?php
 		echo $this->Html->meta('icon');
-		echo $this->Html->css(array ('bootstrap.min', 'custom', 'dataTables.bootstrap', 'jquery.dataTables'));
+		echo $this->Html->css(array ('bootstrap.min', 'custom', 'jquery.dataTables','dataTables.bootstrap'));
                 echo $this->Html->script(array('/js/jquery-2.1.1.min.js'));
                 echo $this->Html->script(array('/js/bootstrap.min.js'));
                 echo $this->Html->script('jquery.dataTables');
@@ -50,10 +50,11 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                         <span class="icon-bar"></span>
                     </button>
            <?php echo $this->Html->link('Login', array('controller' => 'Arena', 'action' => 'login'), array('class' => 'navbar-brand')); ?>
+            <?php echo $this->Html->link('Index', array('controller' => 'Arena', 'action' => '/'), array('class' => 'navbar-brand')); ?>
            <?php echo $this->Html->link('Sight', array('controller' => 'Arena', 'action' => 'sight'), array('class' => 'navbar-brand')); ?>
             <?php echo $this->Html->link('Fighter', array('controller' => 'Arena', 'action' => 'fighter'), array('class' => 'navbar-brand')); ?>
             <?php echo $this->Html->link('Diary', array('controller' => 'Arena', 'action' => 'diary'), array('class' => 'navbar-brand')); ?>
-            <?php echo $this->Html->link('Index', array('controller' => 'Arena', 'action' => '/'), array('class' => 'navbar-brand')); ?>
+            <?php echo $this->Html->link('Messages', array('controller' => 'Arena', 'action' => 'messages'), array('class' => 'navbar-brand')); ?>
             <?php echo $this->Html->link('Sign In', array('controller' => 'Arena', 'action' => 'signin'), array('class' => 'navbar-brand')); ?>
             <?php echo $this->Html->link('Sign Out', array('controller' => 'Arena', 'action' => 'logout'), array('class' => 'navbar-brand btn btn-primary btn-lg')); ?>
                 </div>

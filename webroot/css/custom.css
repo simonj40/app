@@ -33,12 +33,9 @@ img{
     display :none;  
 }
 
-#messages_box{
-    
-    height : 120px;
-    overflow : auto;
-    display : block;
-    border : solid 1px #000;
-        
-    
+#diary_box{
+    height:500px;
+    border: 1px solid #000;
+    overflow: auto;
+      
 }

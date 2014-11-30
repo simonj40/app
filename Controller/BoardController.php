@@ -67,6 +67,25 @@ class BoardController extends AppController
         
     }
     
+    public function yell(){
+        
+        $this->autoRender = false; // We don't render a view in this example
+        $this->request->onlyAllow('ajax'); // No direct access via browser URL
+        $response = '';
+
+        $playerId = $this->Session->read('PlayerId');  
+        $fighter = $this->Fighter->findPlayersFighter($playerId);
+        $yelling = $this->request->data['yelling'];
+       
+        $event = $fighter['Fighter']['name'].' yelled "'.$yelling.'"';
+        
+        if(!empty($fighter)){
+                        $this->Event->yellingEvent($fighter,$event);                  
+        }
+            $this->response->body('Your yelling has been heard');
+         
+    }
+    
     public function move(){
         
         $this->autoRender = false; // We don't render a view in this example
@@ -112,28 +131,7 @@ class BoardController extends AppController
         
             $this->response->body($message);
     }
-    
-    
-    public function message(){
-        
-        $this->autoRender = false; // We don't render a view in this example
-        $this->request->onlyAllow('ajax'); // No direct access via browser URL
-        $message = '';
-        
-        $playerId = $this->Session->read('PlayerId');  
-        $fighter = $this->Fighter->findPlayersFighter($playerId);
-        $fighterIdFrom = $fighter['Fighter']['id'];
-        
-        $fighterToId = $this->request->data['fighterTo']; 
-        $title =  $this->request->data['title']; 
-        $message = $this->request->data['message'];
-        
-        $this->Message->new_message($fighterIdFrom, $fighterToId, $title, $message);
-        $this->response->body('message Sent');
 
-    }
-    
-    
     //to delete
     public function test(){
         
