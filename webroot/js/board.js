@@ -106,7 +106,7 @@ function update(data){
     //Ajax call again after t milliseconds
     setTimeout(function() 
         {
-           //ajax_board(); 
+           ajax_board(); 
         }, time_before_refresh);
 }
 
