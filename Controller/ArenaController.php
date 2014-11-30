@@ -10,7 +10,7 @@ App::uses('AppController', 'Controller');
 class ArenaController extends AppController
 {
     
-    public $uses = array('Player', 'Fighter', 'Event');
+    public $uses = array('Player', 'Fighter', 'Event','Message');
     
     
     public function beforeFilter(){
@@ -67,11 +67,21 @@ class ArenaController extends AppController
     {
         
         $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+        $fighters = $this->Fighter->find('all');
+        $this->set('fighters',$fighters);
+        
+        $time = time() - 3600*24;
+        $date = date('Y-m-d H:i:s', $time);
+        $conditions = array(
+            "date >" => $date,
+                );
+        $messages = $this->Message->find('all', array('conditions' => $conditions));
+        
+        $this->set('messages', $messages);
         
         if(!empty($fighter)){
             $fighterId=$fighter['Fighter']['id'];
             $this->set('fighterId', $fighterId);
-            
         }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighter_form'));
 
     }

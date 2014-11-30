@@ -47,6 +47,39 @@
             </div>
 
         </div>
+        <div class="row ">  
+             <h3>Messages</h3>
+             
+             <div id='messages_box'>
+                 <ul>
+                     <?php foreach ($fighters as $fighter): ?>
+                        <li>
+                            <?php echo $fighter['Fighter']['name']; ?> 
+                        </li>
+                           
+                                          
+                     <?php endforeach; ?>
+                 </ul>
+                 
+                 
+             </div>
+            <div id='new_message'>
+                <form>
+                    <label>Fighter</label><br>
+                    <select id='fighters_select'>
+                        <?php foreach ($fighters as $fighter): ?>
+                            <option value="<?php echo $fighter['Fighter']['id'] ?>">
+                                    <?php echo $fighter['Fighter']['name']; ?>       
+                        <?php endforeach; ?>
+                    </select><br>
+                    <label>Title</label><br>
+                    <input type="text" id="message_title"><br>
+                    <label>Message</label><br>
+                    <input type="text" id="message_text"><br>
+                    <input value='Send' type="button" action="send">
+                </form>
+            </div>
+        </div>
     </div>                
  <div class="col-md-9">
     <h2>Board Game:</h2> 

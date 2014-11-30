@@ -13,16 +13,39 @@ $(function(){
     
     myFighterId = $("#myFighter").attr("fighterId");
     
-    ajax_board();   
-    
-    
     $("[type='button']").on( "click", function() {
         var action = $(this).attr("action");
         if( action == 'move') move($(this).attr("value"));
         if( action == 'attack') attack($(this).attr("value"));
+        if( action == 'send') send_message();
      });
-           
+
+    ajax_board();   
+         
 });
+
+
+function send_message(){
+    
+    var fighterTo = $('#fighters_select option:selected').attr('value');
+    var title = $('#message_title').val();
+    var message = $('#message_text').val();
+    
+    
+    $.ajax({
+	       type: "POST",
+	       url: "/WebArenaGoupSI1-04-BE/Board/message",
+               data : { fighterTo : fighterTo, title : title, message : message},
+               dataType: "text",
+	       success: function(data){
+                   $('#messages_box').text('You : ' + message);
+               },
+	       error: function (error){
+	       }
+    });
+    
+  
+}
 
 
 function move(direction){
@@ -71,9 +94,25 @@ function message(id,message){
 }
 
 
-function update_board(data){
+function update(data){
     //save the new fighters list
     fighters1 = data;
+    
+    update_board();
+    
+    //Set the old list with the fighters from the new list
+    fighters0=data;
+    
+    //Ajax call again after t milliseconds
+    setTimeout(function() 
+        {
+           //ajax_board(); 
+        }, time_before_refresh);
+}
+
+
+function update_board(){
+    
     //Initialise disconnected
     var disconnected = [];
     var isNew;
@@ -86,7 +125,7 @@ function update_board(data){
     //for each fighter from the new list
     $.each(fighters1, function( index1, fighter1 ) {   
         isNew = true;
-        //if my fighter then update its info
+        //if its my fighter then update its info
         if(fighter1.id == myFighterId) update_myFighter(fighter1);
 
         //if the old list exists (not initialization)
@@ -125,15 +164,11 @@ function update_board(data){
         if(d===true) clean_board(fighters0[index]);
     });
     
-    //Set the old list with the fighters from the new list
-    fighters0=data;
     
-    //Ajax call again after t milliseconds
-    setTimeout(function() 
-        {
-           ajax_board(); 
-        }, time_before_refresh);
 }
+
+
+
     
 //Ajax call to the board method of the BoardController to update the board
 function ajax_board(){
@@ -143,7 +178,7 @@ function ajax_board(){
 	       url: "/WebArenaGoupSI1-04-BE/Board/board",
                dataType: "json",
 	       success: function(data){
-                   update_board(data);
+                   update(data);
                },
 	       error: function (error){
 	       }
@@ -189,6 +224,7 @@ function update_myFighter(fighter){
     $('#fighter_strength').text(fighter.skill_strength);
 
 }
+
 
 
 

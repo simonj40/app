@@ -33,3 +33,12 @@ img{
     display :none;  
 }
 
+#messages_box{
+    
+    height : 120px;
+    overflow : auto;
+    display : block;
+    border : solid 1px #000;
+        
+    
+}

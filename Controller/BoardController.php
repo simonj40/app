@@ -12,7 +12,7 @@ class BoardController extends AppController
 {
     
     
-    public $uses = array('Player', 'Fighter', 'Event');
+    public $uses = array('Player', 'Fighter', 'Event','Message');
     
     public $time_before_disconnected = 5;
 
@@ -112,6 +112,38 @@ class BoardController extends AppController
         
             $this->response->body($message);
     }
+    
+    
+    public function message(){
+        
+        $this->autoRender = false; // We don't render a view in this example
+        $this->request->onlyAllow('ajax'); // No direct access via browser URL
+        $message = '';
+        
+        $playerId = $this->Session->read('PlayerId');  
+        $fighter = $this->Fighter->findPlayersFighter($playerId);
+        $fighterIdFrom = $fighter['Fighter']['id'];
+        
+        $fighterToId = $this->request->data['fighterTo']; 
+        $title =  $this->request->data['title']; 
+        $message = $this->request->data['message'];
+        
+        $this->Message->new_message($fighterIdFrom, $fighterToId, $title, $message);
+        $this->response->body('message Sent');
+
+    }
+    
+    
+    //to delete
+    public function test(){
+        
+        $messages = $this->Message->find('all');
+        
+        pr($messages);
+        
+        
+        
+    } 
     
 }
 
