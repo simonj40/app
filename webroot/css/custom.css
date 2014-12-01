@@ -8,11 +8,11 @@
     background-size: 100% auto;
 }*/
 
-table, tr, td {
+#boardTable tr,#boardTable td {
    border: 1px solid black;
 }
 
-#boardTable  td{
+#boardDiv  td{
     height: 60px; 
     width: 70px;   
     text-align: center;
@@ -23,12 +23,6 @@ img{
     width: 70px;
 }
     
-#boardTable  td{
-    
-    height: 60px; 
-    width: 70px;  
-}
-
 #myFighterTable th{
     display :none;  
 }
@@ -38,4 +32,33 @@ img{
     border: 1px solid #000;
     overflow: auto;
       
+}
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 120px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 120px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS (fixed height)
+-------------------------------------------------- */
+.jumbotron-height-fixed
+{
+    //height: 400px;
+    //overflow: auto;
 }

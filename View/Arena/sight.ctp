@@ -8,21 +8,63 @@
    
     <div class="col-md-3" >
         <div class="row">
+            <table class="table" id="myFighter" fighterId ="<?php echo $fighterId; ?>">
+            <tr><th colspan="2"><?php echo $this->Html->image($avatar, array('alt' => 'CakePHP')); ?></th><th><span class="label label-danger" id='fighter_name'></span></th></tr>
+                <tr>
+                    <td><span class="label label-default">Sight</span></td>
+                    <td id="skillSightCell"></td> 
+                </tr>
+                <tr>
+                    <td><span class="label label-primary">Strength</span></td>
+                    <td id="skillStrengthCell"></td>
+                </tr>
+                <tr>
+                    <td><span class="label label-success">Health</span></td>
+                    <td id="skillHealthCell"></td>
+                </tr>
+                <tr>
+                    <td><span class="label label-success">Skill Health</span></td>
+                    <td id="skillHealthCell2"></td>
+                </tr>
+                 <tr>
+                     <td><span class="label label-info">XP Points</span></td>
+                    <td id="fighterXPCell"></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                     <td><span class="label label-info">Unused XP</span></td>
+                    <td id="unusedXPCell"></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                     <td><span class="label label-info">Level</span></td>
+                    <td id="fighterLevelCell"><span id='fighter_level'></span></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span class="label label-warning">Position</span></td>
+                    <td id="fighterPositionCell"> </td>
+                    <td></td>
+                </tr>
+
+            </table>  
+            
+            
+            <!--
             <h2>My Fighter:</h2> 
             <div id="myFighter" fighterId ="<?php echo $fighterId; ?>">
                 <ul>
                     <li>Name : <span id='fighter_name'></span></li>
                     <li>Guild : <span id='fighter_guild'></span></li>
                     <li>Level : <span id='fighter_level'></span></li>
-                    <li>Experience : <span id='fighter_xp'></span></li>
+                    <li>Experience : fighter_xp</li>
                     <li>Current Health : <span id='fighter_c_health'></span></li>
                     <li>Health Skill : <span id='fighter_health'></span></li>
                     <li>Sight Skill : <span id='fighter_sight'></span></li>
                     <li>Strength Skill : <span id='fighter_strength'></span></li>
                 </ul>
-   
             </div>
- 
+            -->
         </div>  
         <div class="row"> <h2>Actions:</h2>
         <h3>Move</h3>
@@ -71,8 +113,8 @@
 </div>              
  <div class="col-md-9">
     <h2>Board Game:</h2> 
-    <div id='boardTable'>
-        <table>
+    <div id='boardDiv'>
+        <table id='boardTable'>
                    <?php  
                         for($j=9; $j>=0; $j--){
                             echo "<tr></tr>";

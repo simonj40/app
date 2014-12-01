@@ -78,5 +78,28 @@ class Event extends AppModel {
         
         $this->save();    
     }
+    
+    public function fighterEvent($fighter){
+        
+        $event = 'Fighter '.$fighter['Fighter']['name'].' has been created';
+        
+        $this->create();
+        
+        $this->set(array(
+            'name' => $event,
+            'date' => date('Y-m-d H:i:s'),
+            'coordinate_x'=>$fighter['Fighter']['coordinate_x'],
+            'coordinate_y'=>$fighter['Fighter']['coordinate_y']
+        ));
+        
+        $this->save(); 
+        
+        
+        
+        
+        
+    }
+    
+    
 }
 

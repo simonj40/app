@@ -253,7 +253,7 @@ class Fighter extends AppModel {
                 'player_id' => $playerId,
                 'coordinate_x'=>$coordinates['x'],
                 'coordinate_y'=>$coordinates['y'],
-                'level'=>1,
+                'level'=>0,
                 'xp'=>0,
                 'skill_sight'=>0,
                 'skill_strength'=>1,
@@ -264,6 +264,100 @@ class Fighter extends AppModel {
             $this->save();  
 
     }
+    
+        /**
+     * Retrieve level, xp, skills 
+     * 
+     */
+    public function retrieveLevelSkills($playerId){
+        $condition=array(
+            'player_id'=>$playerId
+                );
+        //Find fighter details for associated player id
+        $fighter=$this->find( 'first', array( 'conditions' => $condition ) );
+        //compute details
+        $unusedXP = $this->checkUpgradePossible($fighter);
+        $fighterDetails = array(
+            "xp" => $fighter['Fighter']['xp'],
+            "level" => $fighter['Fighter']['level'],
+            "skill_sight" => $fighter['Fighter']['skill_sight'],
+            "skill_strength" => $fighter['Fighter']['skill_strength'],
+            "skill_health" => $fighter['Fighter']['skill_health'],
+            "current_health" => $fighter['Fighter']['current_health'],
+            "current_position_x" => ($fighter['Fighter']['coordinate_x']),
+            "current_position_y" => ($fighter['Fighter']['coordinate_y']),
+            "unusedXP" => $unusedXP
+        );
+        
+        return $fighterDetails;
+        
+    }
+    
+    /**
+     * check if player can increase fighter skills
+     */
+    private function checkUpgradePossible($fighter){
+        return ((floor($fighter['Fighter']['xp']/4) - $fighter['Fighter']['level']) * 4);
+    }
+    
+    /**
+     * upgrade fighter level
+     */
+    private function upgradeLevel($fighter, $fieldToUpdate, $valueToUpdate){
+        $this->read(null,$fighter['Fighter']['id']);
+        $this->set($fieldToUpdate, $valueToUpdate);
+        $this->save();        
+    }
+
+    /**
+     * Update level, xp, skills as per players choice
+     * @param type $fighter
+     */
+    public function updateLevelSkills($playerId, $skillsToUpgrade) {
+        $response=''; 
+        $condition=array(
+            'player_id'=>$playerId
+                );
+        //retrieve current status for fighter
+        $fighter=$this->find( 'first', array( 'conditions' => $condition ) );
+        if ($skillsToUpgrade == 'view'){
+            if($this->checkUpgradePossible($fighter)>= 1){
+                $this->upgradeLevel($fighter, 'level', ($fighter['Fighter']['level'] + 1));
+                $this->upgradeLevel($fighter, 'skill_sight', ($fighter['Fighter']['skill_sight'] + 1));
+                $response = "Your view has been upgraded +1";
+            } else {
+                $response = "You do not have enough spare xp to increase view skill.";                
+            }
+            
+        }elseif ($skillsToUpgrade == 'strength') {
+            if($this->checkUpgradePossible($fighter)>= 1){
+                $this->upgradeLevel($fighter, 'level', ($fighter['Fighter']['level'] + 1));
+                $this->upgradeLevel($fighter, 'skill_strength', ($fighter['Fighter']['skill_strength'] + 1));
+                 $response = "Your strength has been upgraded +1";                
+            } else {
+                $response = "You do not have enough spare xp to increase strength skill.";                
+            }
+            
+        }  elseif ($skillsToUpgrade == 'lifepoints'){
+            if($this->checkUpgradePossible($fighter)>= 3){
+                $this->upgradeLevel($fighter, 'level', ($fighter['Fighter']['level'] + 1));
+                $this->upgradeLevel($fighter, 'current_health', ($fighter['Fighter']['current_health'] + 3));
+                $this->upgradeLevel($fighter, 'skill_health', ($fighter['Fighter']['skill_health'] + 1));
+                 $response = "Your life points have been upgraded +3";
+            } else {
+                $response = "You do not have enough spare xp to increase life points.";                
+            }
+            
+        }else{
+            $response = "Error upgrading your fighter.";            
+        }
+        
+        return $response;
+           
+    }
+    
+    
+    
     
     
 }

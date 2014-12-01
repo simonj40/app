@@ -29,17 +29,20 @@ class ArenaController extends AppController
      */
     public function messages()
     {   
-        $events=$this->Event->diary();
-        $this->set('events',$events);  
         
-        $fighters = $this->Fighter->find('all');
-        $this->set('fighters',$fighters);
-        
-        $playerId = $this->Session->read('PlayerId');  
-        $fighter = $this->Fighter->findPlayersFighter($playerId);
-        $fighterId=$fighter['Fighter']['id'];
-        $this->set('fighterId', $fighterId);
-        
+        $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+        if(!empty($fighter)){
+            //$events=$this->Event->diary();
+            //$this->set('events',$events);  
+
+            $fighters = $this->Fighter->find('all');
+            $this->set('fighters',$fighters);
+
+            $playerId = $this->Session->read('PlayerId');  
+            $fighter = $this->Fighter->findPlayersFighter($playerId);
+            $fighterId=$fighter['Fighter']['id'];
+            $this->set('fighterId', $fighterId);
+        }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighterForm'));
         
     }
     
@@ -87,11 +90,13 @@ class ArenaController extends AppController
      */
     public function sight()
     {
-        
+        $playerId = $this->Session->read('PlayerId');
+        $this->set('avatar','avatars/'.$playerId.'.png');
         $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
         $fighters = $this->Fighter->find('all');
         $this->set('fighters',$fighters);
         
+       
         //retrieve last 24h messages
         $time = time() - 3600*24;
         $date = date('Y-m-d H:i:s', $time);
@@ -105,7 +110,7 @@ class ArenaController extends AppController
         if(!empty($fighter)){
             $fighterId=$fighter['Fighter']['id'];
             $this->set('fighterId', $fighterId);
-        }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighter_form'));
+        }else $this->redirect(array('controller' => 'Arena', 'action' => 'fighterForm'));
 
     }
     
@@ -118,23 +123,52 @@ class ArenaController extends AppController
      */
     public function fighter()
     {    
+        $success = '';
         $playerId = $this->Session->read('PlayerId');
         $fighter = $this->Fighter->findPlayersFighter($playerId);
+
         if(!empty($fighter)){
+            if($this-> request-> is ('post')){
+                $image = $this->request->data['Fighter']['Avatar'];      
+                $success = $this->_change_avatar($image);
+                
+            } 
             $this->set('fighter',$fighter);
-            $this->set('avatar','avatars/'.$playerId.'.png');
-            
-            
+            $this->set('avatar','avatars/'.$playerId.'.png'); 
+            $this->set('upload_success',$success);
         }else{
-            $this->redirect(array('controller' => 'Arena', 'action' => 'fighter_form'));
+            $this->redirect(array('controller' => 'Arena', 'action' => 'fighterForm'));
         }
 
     }
     
+        
+    protected function _change_avatar($image){
+
+        if($image['error']==0){
+                    //check if image format fits
+                   if($image['size']<1048576 && $image['type']=='image/png'){
+                       //set real avatar
+                       $this->_newAvatar($image);
+                       $success = 'Your avatar has been changed !';
+                   }else{
+                       $this->_defaulftAvatar();
+                       $success = "Avatar invalid, you've been assigned a default avatar !";
+                   }
+        }else{
+            $this->_defaulftAvatar();
+            $success = "Avatar invalid, you've been assigned a default avatar !";
+        }
+        
+        return $success;
+    }
+    
+    
+    
     /**
      * @todo Implement the Avavtar download and file namng with the fighter id
      */
-    public function fighter_form()
+    public function fighterForm()
     {   
         $playerId = $this->Session->read('PlayerId');
         $fighter = $this->Fighter->findPlayersFighter($playerId);
@@ -148,34 +182,55 @@ class ArenaController extends AppController
             //check if fighter name exists 
             if(!$this->Fighter->nameExist($name) && $name!=''){
                 //check is avatar field is not empty
+                //Create fighter
+                $this->Fighter->newFighter($playerId, $name);
+                //Create avatar
+                $this->_newAvatar($image);
+                //Create Event
+                $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
+                $this->Event->fighterEvent($fighter);
+                
                 if($image['error']==0){
                     //check if image format fits
                    if($image['size']<1048576 && $image['type']=='image/png'){
-                       //Create fighter
-                       $this->Fighter->newFighter($playerId, $name);
-                       //Create avatar
+                       //set real avatar
                        $this->_newAvatar($image);
-                       //Create Event
-                       $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
-                       $this->Event->fighterEvent($fighter);
-                       //redirect to fighter page
-                       $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
-                   }else $this->Session->setFlash('Avatar image not accepted...');
-                }else $this->Session->setFlash('Avavtar field empty...');
+                   }else{
+                       $this->_defaulftAvatar();
+                   }
+                }else{
+                    $this->_defaulftAvatar();
+                }
+  
+                //redirect to fighter page
+                $this->redirect(array('controller' => 'Arena', 'action' => 'fighter'));
+                
             }else $this->Session->setFlash('Fighter with the name '.$name.' already exists');   
         }
     }
     
 
     
+
+    
     protected function _newAvatar($image){
         
         $playerId = $this->Session->read('PlayerId');
-        $type=  explode('/',$image['type']);
-        $destination='img/avatars/'.$playerId.'.'.$type[1];
+        $destination='img/avatars/'.$playerId.'.png';
         move_uploaded_file($image['tmp_name'], $destination);
         
-    }  
+    } 
+    
+    
+    protected function _defaulftAvatar(){
+        
+        $playerId = $this->Session->read('PlayerId');
+        $destination='img/avatars/'.$playerId.'.png';
+        $no = rand(1, 6);
+        $source = 'img/avatars/default/'.$no.'.png';
+        copy($source, $destination);
+        
+    }
     
     /**
      * 

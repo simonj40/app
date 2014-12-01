@@ -18,7 +18,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
         </title>
     <?php
 		echo $this->Html->meta('icon');
-		echo $this->Html->css(array ('bootstrap.min', 'custom', 'jquery.dataTables','dataTables.bootstrap'));
+		echo $this->Html->css(array ('bootstrap.min', 'custom', 'jquery.dataTables','dataTables.bootstrap', 'carousel'));
                 echo $this->Html->script(array('/js/jquery-2.1.1.min.js'));
                 echo $this->Html->script(array('/js/bootstrap.min.js'));
                 echo $this->Html->script('jquery.dataTables');
@@ -107,6 +107,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
+        <?php echo $this->fetch('scriptBottom');?>
 
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 

@@ -199,7 +199,7 @@ function set_avatar(fighter){
     var y =fighter.coordinate_y;
     var id = '#'+x+'_'+y;
     var link ="/WebArenaGoupSI1-04-BE/img/avatars/"+fighter.player_id+".png";
-    var img="<img src='"+link+"'>";
+    var img="<img src='"+link+"' data-toggle='tooltip' data-placement='top' title='"+fighter.name+"'>";
     $(id).html(img);
     
 }
