@@ -90,7 +90,8 @@ function messages_table(data){
     scrollX: false,
     scrollCollapse: true,
     paging:false,
-    order: [[ 0, "desc" ]]
+    order: [[ 0, "desc" ]],
+    oLanguage: {"sZeroRecords": "You've no message..."}
     
 } );
     

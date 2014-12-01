@@ -91,7 +91,15 @@ class ArenaController extends AppController
     public function sight()
     {
         $playerId = $this->Session->read('PlayerId');
-        $this->set('avatar','avatars/'.$playerId.'.png');
+        $avatar = 'avatars/'.$playerId.'.png';
+        $avatar_default = 'avatars/default/1.png';
+        
+        if(file_exists(WWW_ROOT.'img/'.$avatar)){
+            $this->set('avatar',$avatar);
+        }else{
+            $this->set('avatar',$avatar_default);
+        }
+                
         $fighter = $this->Fighter->findPlayersFighter($this->Session->read('PlayerId'));
         $fighters = $this->Fighter->find('all');
         $this->set('fighters',$fighters);
@@ -134,8 +142,16 @@ class ArenaController extends AppController
                 
             } 
             $this->set('fighter',$fighter);
-            $this->set('avatar','avatars/'.$playerId.'.png'); 
             $this->set('upload_success',$success);
+            $avatar = 'avatars/'.$playerId.'.png';
+            $avatar_default = 'avatars/default/1.png';
+            
+            if(file_exists(WWW_ROOT.'img/'.$avatar)){
+            $this->set('avatar',$avatar);
+            }else{
+                $this->set('avatar',$avatar_default);
+            }
+            
         }else{
             $this->redirect(array('controller' => 'Arena', 'action' => 'fighterForm'));
         }

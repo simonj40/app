@@ -6,7 +6,7 @@ class Fighter extends AppModel {
     
     public $boardX=15;
     public $boardY=10;
-    public $time_before_disconnected = 5;
+    public $time_before_disconnected = 30;
 
     public $displayField = 'name';
     public $belongsTo = array(
@@ -158,12 +158,16 @@ class Fighter extends AppModel {
      */
     public function attackSuceed($fighter,$victim){
         //get the Fighter from the data base
-        $this->read(null,$fighter['Fighter']['id']);
+        $this->read(null, $fighter['Fighter']['id']);
         //The fighter get +1 xp
         $this->set('xp',$this->data['Fighter']['xp'] + 1);
         
+        $fighter_strenght = $this->strength_guild($fighter);
+        
+        //$fighter_strenght = $fighter['Fighter']['skill_strength'];
+        
         //Test if the victim got killed
-        if($fighter['Fighter']['skill_strength']>=$victim['Fighter']['current_health']){
+        if($fighter_strenght >= $victim['Fighter']['current_health']){
             //The attacker get xp + victim's level
             $this->set('xp',$this->data['Fighter']['xp'] + $victim['Fighter']['level']);
             $this->save();
@@ -176,10 +180,27 @@ class Fighter extends AppModel {
             $this->save();
             //Victim's health got dimished according to the attacker strength
             $this->read(null,$victim['Fighter']['id']);
-            $this->set('current_health',$this->data['Fighter']['current_health'] - $fighter['Fighter']['skill_strength']);
+            $this->set('current_health',$this->data['Fighter']['current_health'] - $fighter_strenght);
             $this->save();  
         }
         
+    }
+    
+    public function strength_guild($fighter){
+        
+        $guild_id = $fighter['Fighter']['guild_id'];  
+        $strength = $fighter['Fighter']['skill_strength'];  
+        if($guild_id != ''){
+            //If in a guild 
+            $condition=array(
+            'guild_id'=>$guild_id
+                );
+            
+           $guild_count =  $this->find( 'count', array( 'conditions' => $condition ) );
+           $strength += $guild_count - 1;
+        }
+        
+        return $strength;
     }
     
     public function deleteAvatar($playerId){     

@@ -14,7 +14,7 @@ class BoardController extends AppController
     
     public $uses = array('Player', 'Fighter', 'Event','Message');
     
-    public $time_before_disconnected = 5;
+    public $time_before_disconnected = 30;
 
     public function board(){
         

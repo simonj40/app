@@ -26,7 +26,6 @@ $(function(){
 
 
 function yell(yelling){
-    console.log(yelling);
     
     $.ajax({
 	       type: "POST",
@@ -68,7 +67,6 @@ function attack(direction){
                data : { direction : direction},
                dataType: "text",
 	       success: function(data){
-                   console.log(data);
                    message('#attackMessage',data);
                },
 	       error: function (error){
@@ -82,7 +80,7 @@ function message(id,message){
         $(id).text(message);
         setTimeout(function() 
         {
-           $(id).empty();
+           $(id).html('&nbsp;');
         }, time_before_message_erase);
     }
     
@@ -199,8 +197,25 @@ function set_avatar(fighter){
     var y =fighter.coordinate_y;
     var id = '#'+x+'_'+y;
     var link ="/WebArenaGoupSI1-04-BE/img/avatars/"+fighter.player_id+".png";
-    var img="<img src='"+link+"' data-toggle='tooltip' data-placement='top' title='"+fighter.name+"'>";
-    $(id).html(img);
+    var link_default ="/WebArenaGoupSI1-04-BE/img/avatars/default/1.png";
+    var img;
+    
+    //img="<img src='"+link+"' data-toggle='tooltip' data-placement='top' title='"+fighter.name+"'>";
+    
+    
+    $.get(link)
+    .done(function() { 
+        img="<img src='"+link+"' data-toggle='tooltip' data-placement='top' title='"+fighter.name+"'>";
+        $(id).html(img);
+    }).fail(function() { 
+        // Image doesn't exist - do something else.
+        img="<img src='"+link_default+"' data-toggle='tooltip' data-placement='top' title='"+fighter.name+"'>";
+        $(id).html(img);
+    });
+    
+    
+    
+    
     
 }
 
@@ -210,14 +225,31 @@ function update_myFighter(fighter){
     var guild;
     if(fighter.guild_id == null) guild = 'none';
     
+    $unused_xp = parseInt(fighter.xp) - parseInt(fighter.level)*4;
+    $fighter_c_heath = $('#fighter_c_health').text();
+    
+    if($fighter_c_heath != ''){
+        if(parseInt($fighter_c_heath) != parseInt(fighter.current_health)){
+            message('#attack_alert'," You're being attacked ! ");       
+        }
+    }
+    
+    
     $('#fighter_name').text(fighter.name);
     $('#fighter_guild').text(guild);
     $('#fighter_level').text(fighter.level);
     $('#fighter_xp').text(fighter.xp);
+    $('#fighter_xp_unused').text($unused_xp);
     $('#fighter_c_health').text(fighter.current_health);
     $('#fighter_health').text(fighter.skill_health);
     $('#fighter_sight').text(fighter.skill_sight);
     $('#fighter_strength').text(fighter.skill_strength);
+    $('#fighter_position').text('( '+fighter.coordinate_x+' , '+fighter.coordinate_y+' )');
+    
+    
+    
+    
+    
 
 }
 
