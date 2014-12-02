@@ -179,7 +179,6 @@ function update_sight_board(fighter1){
     var x = parseInt(fighter1.coordinate_x);
     var y = parseInt(fighter1.coordinate_y);
     var sight = parseInt(fighter1.skill_sight) + 1;    
-    console.log(x+' '+y+' '+sight);
     
     for( i=0 ; i<15 ; i++){
         for( j=0 ; j<10 ; j++){ 

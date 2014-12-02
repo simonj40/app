@@ -14,7 +14,7 @@ class BoardController extends AppController
     
     public $uses = array('Player', 'Fighter', 'Event','Message');
     
-    public $time_before_disconnected = 30;
+    public $time_before_disconnected = 60;
 
     public function board(){
         
@@ -57,10 +57,6 @@ class BoardController extends AppController
                 }
             }  
         }
-        
-        
-
-        
         $json = json_encode($fighters_array);
         
         $this->response->body($json);
@@ -95,6 +91,9 @@ class BoardController extends AppController
         $playerId = $this->Session->read('PlayerId');  
         $fighter = $this->Fighter->findPlayersFighter($playerId);
         $direction = $this->request->data['direction'];
+        
+        $previous_x = $fighter['Fighter']['coordinate_x'];
+        $previous_y = $fighter['Fighter']['coordinate_y'];
        
         if(!empty($fighter)){
             $fighterId=$fighter['Fighter']['id'];           
@@ -102,7 +101,7 @@ class BoardController extends AppController
             if($success){
                         //Set Event
                         $fighter = $this->Fighter->findById($fighterId);
-                        $this->Event->moveEvent($fighter);
+                        $this->Event->moveEvent($fighter, $previous_x, $previous_y);
                         $response = 'Move succeed !';
             }else $response = 'Move Not Possible...';
         }

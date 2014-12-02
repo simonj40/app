@@ -2,24 +2,31 @@
 
 App::uses('AppController', 'Controller');
 
-class UpgradeController extends AppController{
+class FighterController extends AppController{
     
     public $uses = array('Fighter', 'Guild');
+    
     /**
      * Method to retrieve level and skill details of a fighter for a specific player
      */
     public function retrieveLevelSkills(){
-        //set response type
-        $this->response->type('json');    
         $this->autoRender = false; 
+        //set response type
+        //$this->request->onlyAllow('ajax'); 
+        $this->response->type('json');    
+        
         
         //retrieve fighter object for current player from the model
         $playerId = $this->Session->read('PlayerId');  
         $FighterDetails = $this->Fighter->retrieveLevelSkills($playerId);
         
+        
+        
         //return json object
-         $json = json_encode($FighterDetails);        
+         $json = json_encode($FighterDetails);  
+         
          $this->response->body($json);        
+         
         
     }
     
@@ -27,7 +34,6 @@ class UpgradeController extends AppController{
           
         $this->autoRender = false; 
         $this->request->onlyAllow('ajax'); 
-        
         $skillToUpgrade = $this->request->data['skillToUpgrade'];
                 
         $playerId = $this->Session->read('PlayerId');  
@@ -37,8 +43,9 @@ class UpgradeController extends AppController{
          $json = json_encode($upgradeResponse);        
          $this->response->body($json); 
         
-    }    
+    } 
     
+       
     public function checkUserInGuild(){
         $this->autoRender = false; 
         //$this->request->onlyAllow('ajax'); 
@@ -51,12 +58,12 @@ class UpgradeController extends AppController{
     
      public function retrieveAllGuilds(){
         $this->autoRender = false; 
-        $this->request->onlyAllow('ajax'); 
+        //$this->request->onlyAllow('ajax'); 
         
-        $guilds = $this->Guild->find('all');
-        //$fighters = $this->Fighter->find('all');
+        $allGuilds = $this->Guild->retrieveAllGuilds();
+        
         //return json
-         $json = json_encode($guilds);        
+        $json = json_encode($allGuilds);        
          $this->response->body($json);
     }
     
@@ -76,54 +83,6 @@ class UpgradeController extends AppController{
         $json = json_encode($playersGuild);        
          $this->response->body($json);
     }
-    
-    public function leaveGuild(){
-        $this->autoRender = false; 
-        $this->request->onlyAllow('ajax'); 
-        
-        $playerId = $this->Session->read('PlayerId'); 
-        $fighter = $this->Fighter->findPlayersFighter($playerId);
-        
-        $this->Fighter->leaveGuild($fighter['Fighter']['id']);
-        
-        $this->response->body($fighter['Fighter']['id']);
-        
-    }
-    
-    public function joinGuild(){
-        $this->autoRender = false; 
-        $this->request->onlyAllow('ajax'); 
-        $guilId = $this->request->data['guildId'];
-        
-        $playerId = $this->Session->read('PlayerId');
-        $fighter = $this->Fighter->findPlayersFighter($playerId,$guilId);
-        
-        $this->Fighter->joinExistingGuild($fighter['Fighter']['id'], $guilId);
-        
-        $this->response->body($fighter['Fighter']['id']);
-        
-    }
-    
-    public function createGuild(){
-        $this->autoRender = false; 
-        $this->request->onlyAllow('ajax'); 
-        $guilName = $this->request->data['name'];
-        
-        $playerId = $this->Session->read('PlayerId');
-        $fighter = $this->Fighter->findPlayersFighter($playerId);
-        
-        $guildId = $this->Guild->createGuild($guilName);
-        
-        $this->Fighter->joinExistingGuild($fighter['Fighter']['id'], $guildId);
-        
-        $this->response->body($guildId);
-        
-        
-    }
-    
-    
-    
-    
     
    
 }

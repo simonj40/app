@@ -53,7 +53,7 @@ $this->Html->script('fighter', array('block' => 'scriptBottom'));
         </tr>
         
     </table>  
-        </div>
+  </div>
         <div class='row'>
             <?php
             echo $this->Form->create('Fighter', array('role'=>'form', 'class'=>'form-horizontal' , 'enctype'=>'multipart/form-data'));
@@ -65,9 +65,27 @@ $this->Html->script('fighter', array('block' => 'scriptBottom'));
         </div>
         
     </div>
-    <div class="col-md-9">
+    <div class="col-md-8 col-md-offset-1">
         <p>For Guild Option</p>
-    </div>                  
+        <table class="table">
+            <thead>
+            <th>Guild Name(s)</th><th></th>
+            </thead>
+            <tbody id="guildTable">                
+            </tbody>
+        </table>
+        <div class='row' id='create_guild'>
+            
+            <div class="col-lg-8">
+                <div class="input-group">
+                  <span class="input-group-btn">                
+                      <button  class="btn btn-primary" id="create_button">Create Guild</button>            
+                  </span>
+                    <input id="guild_name" type="text" placeholder="Guild name" class="form-control input-md">
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+        </div>
+    </div>                                    
 </div>
 
 

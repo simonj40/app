@@ -59,20 +59,16 @@ class ArenaController extends AppController
         $login = $this->Session->read('Connected');
         $this->set('myname', $login);
         
+        $img_list = $this->_list_avatars();
+        
+        $this->set('img_list', $img_list);
         
         //to delete
-        
         $plot = array();
-        
-        
         for($i=1;$i<20;$i++){
-            
             $dot = array($i,$i*$i);
             array_push($plot, $dot);
         }
-        
-        
-        pr(json_encode($plot));
     }
     /**
      * @todo
@@ -267,9 +263,7 @@ class ArenaController extends AppController
      * 
      */
     public function diary()
-    {   
-        $events=$this->Event->diary();
-        $this->set('events',$events);  
+    {    
     }
     
     
@@ -330,11 +324,84 @@ class ArenaController extends AppController
 
     }
     
+    protected function _list_avatars(){
+        
+        $img_list = array();
+        
+        //read and grab the filenames in avatars
+        $dir = 'img/avatars';
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false) {
+                    if($file != '.' && $file != '..' && $file != 'default' && $file != '.DS_Store'){
+                        $img = 'avatars/'.$file;
+                        array_push($img_list, $img);
+                    }
+                }
+                closedir($dh);
+            }
+            
+        }
+        
+        
+        //read and grab the filenames in avatars/default
+        $dir = 'img/avatars/default';
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false) {
+                    if($file != '.' && $file != '..' && $file != '.DS_Store'){
+                        $img = 'avatars/default/'.$file;
+                        array_push($img_list, $img);
+                    }
+                }
+                closedir($dh);
+            }
+        }
+        
+        return $img_list;   
+    }
+    
+    
     /**
      * This is just for testing bootstrap
      */
     public function testbootstrap()
     {
+        $day_no = 7;
+        
+        $day = 3600*24;
+        $t1 = 0;
+        $t2 = $day;
+        $array = array();
+        for($i=0;$i<$day_no;$i++){
+             
+            $time1 = time() - $t1;
+            $date1 = date('Y-m-d H:i:s', $time1);
+            $date_axis = date('Y-m-d', $time1);
+            
+            $time2 = time() - $t2;
+            $date2 = date('Y-m-d H:i:s', $time2);
+            //search conditions
+            $conditions = array(
+                "date <" => $date1,
+                "date >" => $date2
+                    );
+            //retrieve all active fighters
+           $event_count =  $this->Event->find("count", array('conditions' => $conditions));
+           $array_dot = array(
+                       $date_axis=> $event_count
+           );
+           array_push($array, $array_dot);
+           
+           $t1+=$day;
+           $t2+=$day;
+            
+        }
+        
+        
+        pr(json_encode($array));
+        
+        
         
     }
     
@@ -343,4 +410,4 @@ class ArenaController extends AppController
     
 
 }
-?>
+

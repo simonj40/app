@@ -1,7 +1,7 @@
 <?php
     $this->assign('title', 'sight');
     $this->layout = 'bootstrap';
-    echo $this->Html->script('board'); 
+     
 
 ?>
 <h1>Sight</h1>
@@ -119,5 +119,8 @@
 </div>
 
 
+<?php
+    echo $this->Html->script('board');
+?>
 
 

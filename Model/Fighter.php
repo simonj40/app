@@ -6,13 +6,20 @@ class Fighter extends AppModel {
     
     public $boardX=15;
     public $boardY=10;
-    public $time_before_disconnected = 30;
+    public $time_before_disconnected = 60;
 
     public $displayField = 'name';
     public $belongsTo = array(
         'Player' => array(
             'className' => 'Player',
             'foreignKey' => 'player_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
+        'Guild' => array(
+            'className' => 'Guild',
+            'foreignKey' => 'guild_id',
             'conditions' => '',
             'fields' => '',
             'order' => ''
@@ -378,6 +385,54 @@ class Fighter extends AppModel {
     }
     
     
+      /**
+     * Join a player's fighter to an existing guild
+     * @param type $fighterId
+     * @param type $guildId
+     */
+    public function joinExistingGuild($fighterId, $guildId){
+        $this->read(null, $fighterId);
+        $this->set('guild_id', $guildId);
+        $this->save();      
+        
+    }
+    /**
+     * Leave player from guild
+     * @param type $fighterId
+     */
+    public function leaveGuild($fighterId){
+        
+        $this->read(null, $fighterId);
+        $this->set('guild_id', null);
+        $this->save();       
+    }
+    
+     /**
+     * Check whether a player's fighter is already in an existing guild
+     */    
+    public function checkExistInGuild($playerId){
+         $condition=array(
+            'player_id'=>$playerId
+                );
+        //retrieve fighter details...
+        $fighter=$this->find( 'first', array( 'conditions' => $condition ) );
+        if($fighter['Fighter']['guild_id'] != null){
+            //fighter is in a guild!
+            return true;
+        }else{
+            //fighter not in any existing guild
+            return false;
+        }
+    }
+    
+    public function retrievePlayerGuild($playerId){
+         $condition=array(
+            'player_id'=>$playerId
+                );
+        //retrieve fighter details...
+        $fighter=$this->find( 'first', array( 'conditions' => $condition ) );
+        return $fighter;
+    }
     
     
     

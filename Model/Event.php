@@ -20,20 +20,23 @@ class Event extends AppModel {
         //retrieve all active fighters
         return $this->find("all", array('conditions' => $conditions));
     }
-    
-    public function moveEvent($fighter){
+
+    public function moveEvent($fighter, $previous_x, $previous_y){
+        $x = $fighter['Fighter']['coordinate_x'];
+        $y = $fighter['Fighter']['coordinate_y'];
         
-        $event = $fighter['Fighter']['name'].' moved';
+        $event = $fighter['Fighter']['name'].' moved from ( '.
+                $previous_x.' , '.$previous_y.' ) to ( '.$x.' , '.$y.' )';
 
         $this->create();
         $this->set(array(
             'name' => $event,
             'date' => date('Y-m-d H:i:s'),
-            'coordinate_x'=>$fighter['Fighter']['coordinate_x'],
-            'coordinate_y'=>$fighter['Fighter']['coordinate_y']
+            'coordinate_x'=>$x,
+            'coordinate_y'=>$y
         ));
         
-        $this->save();    
+        $this->save();  
     }
     
     public function yellingEvent($fighter,$event){

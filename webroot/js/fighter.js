@@ -1,4 +1,16 @@
-loadFigterDetails();
+$(function(){
+   
+    loadFigterDetails();
+    loadGuildInfo();
+    
+    
+    $("#create_button").on( "click", function() {
+        createGuild();
+     });
+    
+}); 
+
+
 //Ajax fucntion to retrieve fighter details
 function loadFigterDetails(){
     $.ajax({
@@ -50,3 +62,134 @@ function upgradeSkillLevel(skill){
     
   
 }
+
+//load guild info
+function loadGuildInfo(){
+   $.ajax({
+	       type: "GET",
+	       url: "/WebArenaGoupSI1-04-BE/Upgrade/checkUserInGuild",
+               dataType: "text",
+               success: function (data) {   
+                   if(data == '1'){
+                       retrievePlayerGuild();
+                   }else{
+                      retrieveGuilds();                        
+                   }                 
+               },
+	       error: function (error){
+                   alert('errorx');
+	       }
+    });
+    
+}
+
+//ajax call to retrieve all guilds
+function retrievePlayerGuild(){
+    $('#create_guild').hide();
+    $.ajax({
+	       type: "GET",
+	       url: "/WebArenaGoupSI1-04-BE/Upgrade/retrievePlayersGuild",
+               contentType: "application/json",
+               dataType: "json",
+               success: function (data) {   
+                  
+                   //populate HTML ul with list of guilds
+                    $("#guildTable").empty();
+                    //$("#listAllGuilds").children().remove();
+                    $("#guildTable").append('<tr><td>' + data.Guild.name + '</td><td><button onclick="leave_guil();">' + "Leave Guild" + '</button></td></tr>');                                               
+               },
+	       error: function (error){
+	       }
+    }); 
+}
+
+
+//ajax call to retrieve all guilds
+function retrieveGuilds(){
+    $('#create_guild').show();
+    
+    $.ajax({
+	       type: "GET",
+	       url: "/WebArenaGoupSI1-04-BE/Upgrade/retrieveAllGuilds",
+               contentType: "application/json",
+               dataType: "json",
+               success: function (data) {            
+                   $("#guildTable").empty();
+                   //populate HTML ul with list of guilds
+                   $.each(data, function(key,value) {
+                            
+                            //$("#listAllGuilds").children().remove();
+                            $("#guildTable").append('<tr><td>' + value.Guild.name + '</td><td><button onclick="join_guil('+value.Guild.id+');">' + "Join Guild" + '</button></td></tr>');
+                            });                                                                       
+               },
+	       error: function (error){
+	       }
+    }); 
+}
+
+
+function leave_guil(){
+    
+    $.ajax({
+	       type: "POST",
+	       url: "/WebArenaGoupSI1-04-BE/Upgrade/leaveGuild",
+               dataType: "text",
+	       success: function(data){
+                   loadGuildInfo();
+               },
+	       error: function (error){
+	       }
+    });
+    
+}
+
+function join_guil(guild){
+    
+    $.ajax({
+	       type: "POST",
+	       url: "/WebArenaGoupSI1-04-BE/Upgrade/joinGuild",
+               data:{guildId:guild},
+               dataType: "text",
+	       success: function(data){
+                   loadGuildInfo();
+               },
+	       error: function (error){
+	       }
+    });
+    
+}
+   
+    
+function createGuild(){
+    
+    var name = $('#guild_name').val();
+    
+    if(name != ''){
+        $.ajax({
+	       type: "POST",
+	       url: "/WebArenaGoupSI1-04-BE/Upgrade/createGuild",
+               data:{name:name},
+               dataType: "text",
+	       success: function(data){
+                   
+                   loadGuildInfo();
+               },
+	       error: function (error){
+	       }
+    });
+    }
+    
+    
+    
+    
+    
+    
+}    
+    
+
+    
+    
+    
+    
+    
+
