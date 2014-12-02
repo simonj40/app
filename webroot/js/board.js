@@ -8,6 +8,9 @@ var time_before_message_erase = 5000;
 //Fighter's player
 var myFighter;
 var myFighterId;
+//board colors
+var onsight = '#fff';
+var outsight =  '#669999';
 
 $(function(){ 
     
@@ -120,7 +123,9 @@ function update_board(){
     $.each(fighters1, function( index1, fighter1 ) {   
         isNew = true;
         //if its my fighter then update its info
-        if(fighter1.id == myFighterId) update_myFighter(fighter1);
+        if(fighter1.id == myFighterId){
+            update_myFighter(fighter1);
+        }
 
         //if the old list exists (not initialization)
         if(fighters0.length>0){ 
@@ -139,6 +144,9 @@ function update_board(){
                             clean_board(fighter0);
                             //add the avatar image to its new position
                             set_avatar(fighter1);
+                            if(fighter1.id == myFighterId){
+                                update_sight_board(fighter1);
+                            }    
                     }
                 }
             }); 
@@ -149,6 +157,9 @@ function update_board(){
         }else{
             //Initialize the board with the player from the list
             set_avatar(fighter1);
+            if(fighter1.id == myFighterId){
+                update_sight_board(fighter1);
+            }
         }
         
     });
@@ -161,6 +172,26 @@ function update_board(){
     
 }
 
+
+
+function update_sight_board(fighter1){
+    
+    var x = parseInt(fighter1.coordinate_x);
+    var y = parseInt(fighter1.coordinate_y);
+    var sight = parseInt(fighter1.skill_sight) + 1;    
+    console.log(x+' '+y+' '+sight);
+    
+    for( i=0 ; i<15 ; i++){
+        for( j=0 ; j<10 ; j++){ 
+            var id = '#'+i+'_'+j;
+            if(i > x+sight || i < x-sight || j > y+sight || j < y-sight ){
+                    $(id).css('background-color',outsight);   
+            }else{
+                $(id).css('background-color',onsight);
+            }
+        }
+    }
+}
 
 
     

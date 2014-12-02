@@ -58,6 +58,21 @@ class ArenaController extends AppController
     {
         $login = $this->Session->read('Connected');
         $this->set('myname', $login);
+        
+        
+        //to delete
+        
+        $plot = array();
+        
+        
+        for($i=1;$i<20;$i++){
+            
+            $dot = array($i,$i*$i);
+            array_push($plot, $dot);
+        }
+        
+        
+        pr(json_encode($plot));
     }
     /**
      * @todo

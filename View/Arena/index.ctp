@@ -1,5 +1,8 @@
 <?php $this->assign('title', 'index');
 $this->layout = 'bootstrap';
+echo $this->Html->script('index'); 
+    echo $this->Html->script('jquery.jqplot');
+    echo $this->Html->script('excanvas');
 ?>
 <h1>Bienvenu <?php echo $myname;?> dans WebArena</h1>
 
@@ -41,3 +44,12 @@ $this->layout = 'bootstrap';
     </div><!-- /.carousel -->
     
 </div>
+
+<div  class="row text-danger">
+    
+    <div id="chartdiv" style="height:400px;width:300px; "></div>
+    
+</div>
+
+
+

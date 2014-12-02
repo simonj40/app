@@ -2,6 +2,7 @@
     $this->assign('title', 'sight');
     $this->layout = 'bootstrap';
     echo $this->Html->script('board'); 
+
 ?>
 <h1>Sight</h1>
 <div class="row text-danger">
@@ -48,23 +49,6 @@
                 </tr>
 
             </table>  
-            
-            
-            <!--
-            <h2>My Fighter:</h2> 
-            <div id="myFighter" fighterId ="<?php echo $fighterId; ?>">
-                <ul>
-                    <li>Name : <span id='fighter_name'></span></li>
-                    <li>Guild : <span id='fighter_guild'></span></li>
-                    <li>Level : <span id='fighter_level'></span></li>
-                    <li>Experience : fighter_xp</li>
-                    <li>Current Health : <span id='fighter_c_health'></span></li>
-                    <li>Health Skill : <span id='fighter_health'></span></li>
-                    <li>Sight Skill : <span id='fighter_sight'></span></li>
-                    <li>Strength Skill : <span id='fighter_strength'></span></li>
-                </ul>
-            </div>
-            -->
         </div>  
         <div class="row"> 
             <h2>Actions:</h2>

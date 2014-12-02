@@ -18,11 +18,12 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
         </title>
     <?php
 		echo $this->Html->meta('icon');
-		echo $this->Html->css(array ('bootstrap.min', 'custom', 'jquery.dataTables','dataTables.bootstrap', 'carousel'));
+		echo $this->Html->css(array ('bootstrap.min', 'custom', 'jquery.dataTables','dataTables.bootstrap', 'carousel', 'jquery.jqplot'));
                 echo $this->Html->script(array('/js/jquery-2.1.1.min.js'));
                 echo $this->Html->script(array('/js/bootstrap.min.js'));
                 echo $this->Html->script('jquery.dataTables');
                 echo $this->Html->script('dataTables.bootstrap');
+                
                 
                 //echo $this->Html->script(array('/js/ie10-viewport-bug-workaround'));
                 echo $this->fetch('script');
@@ -101,8 +102,6 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
         <div class="container">
       <?php echo $this->element('sql_dump_bootstrap'); ?>
         </div>
-
-
 
         <!-- Bootstrap core JavaScript
         ================================================== -->
